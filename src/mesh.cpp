@@ -47,11 +47,6 @@ Mesh::~Mesh() {}
 
 void Mesh::render(glm::mat4 mvp) const
 {
-    for (int i = 0; i < vertices.size(); i++)
-    {
-        std::cout << vertices[i] << std::endl;
-    }
-
     mvp = mvp * model;
     glUseProgram(material.get());
 
