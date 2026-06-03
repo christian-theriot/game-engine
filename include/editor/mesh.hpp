@@ -1,7 +1,7 @@
 #ifndef __MESH_HPP
 #define __MESH_HPP
 
-#include <material.hpp>
+#include <editor/material.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 

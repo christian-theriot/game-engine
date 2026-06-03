@@ -1,4 +1,4 @@
-#include <mesh-w-color.hpp>
+#include <editor/mesh-w-color.hpp>
 #include <iostream>
 
 void initMeshWithColor(

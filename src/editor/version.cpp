@@ -1,4 +1,4 @@
-#include <version.hpp>
+#include <editor/version.hpp>
 #include <sstream>
 
 Version::Version(int major, int minor, int patch)

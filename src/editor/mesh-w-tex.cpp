@@ -1,4 +1,4 @@
-#include <mesh-w-tex.hpp>
+#include <editor/mesh-w-tex.hpp>
 #include <iostream>
 
 void initMeshWithUV(

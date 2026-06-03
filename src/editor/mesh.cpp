@@ -1,4 +1,4 @@
-#include <mesh.hpp>
+#include <editor/mesh.hpp>
 #include <iostream>
 
 void initMesh(GLuint &VAO, GLuint &VBO, const std::vector<GLfloat> &vertices)

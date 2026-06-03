@@ -1,4 +1,4 @@
-#include <window.hpp>
+#include <editor/window.hpp>
 #include <iostream>
 
 Window::Window()

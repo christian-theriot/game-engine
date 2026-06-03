@@ -1,8 +1,8 @@
 #ifndef __MESH_W_TEX_HPP
 #define __MESH_W_TEX_HPP
 
-#include <material.hpp>
-#include <mesh.hpp>
+#include <editor/material.hpp>
+#include <editor/mesh.hpp>
 #include <glm/glm.hpp>
 #include <vector>
 

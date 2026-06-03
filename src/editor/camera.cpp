@@ -1,4 +1,4 @@
-#include <camera.hpp>
+#include <editor/camera.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 Camera::Camera(GLfloat fov, GLfloat width, GLfloat height, GLfloat min, GLfloat max)

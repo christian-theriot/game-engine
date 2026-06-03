@@ -2,15 +2,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <version.hpp>
-#include <window.hpp>
-#include <camera.hpp>
-#include <mesh.hpp>
-#include <image.hpp>
-#include <mesh-w-color.hpp>
-#include <mesh-w-tex.hpp>
+#include <editor/version.hpp>
+#include <editor/window.hpp>
+#include <editor/camera.hpp>
+#include <editor/mesh.hpp>
+#include <editor/image.hpp>
+#include <editor/mesh-w-color.hpp>
+#include <editor/mesh-w-tex.hpp>
 #include <fstream>
 #include <sstream>
+#include <map>
+#include <memory>
 
 int render();
 
@@ -31,7 +33,7 @@ int render()
     Camera camera;
 
     // BMP bmp1("assets/textures/sand.bmp");
-    PNG png1("assets/textures/checkerboard.png");
+    Image png1("assets/textures/checkerboard.png");
 
     MeshWithTexture mesh1("assets/shaders/texture",
                           {-1.0f, -1.0f, -1.0f, // triangle 1 : begin
@@ -107,7 +109,7 @@ int render()
                            0.f, 0.f,
                            1.f, 1.f});
 
-    PNG png2("assets/textures/checkerboard-w-color.png");
+    Image png2("assets/textures/checkerboard-w-color.png");
     MeshWithTexture mesh2("assets/shaders/texture",
                           {1.0f, -1.0f, -1.0f, // triangle 1 : begin
                            1.0f, -1.0f, 1.0f,
@@ -182,6 +184,81 @@ int render()
                            0.f, 0.f,
                            1.f, 1.f});
 
+    Image bmp1("assets/textures/sand.bmp");
+    MeshWithTexture mesh3("assets/shaders/texture",
+                          {1.0f, -1.0f, 1.0f, // triangle 1 : begin
+                           1.0f, -1.0f, 3.0f,
+                           1.0f, 1.0f, 3.0f, // triangle 1 : end
+                           3.0f, 1.0f, 1.0f, // triangle 2 : begin
+                           1.0f, -1.0f, 1.0f,
+                           1.0f, 1.0f, 1.0f, // triangle 2 : end
+                           3.0f, -1.0f, 3.0f,
+                           1.0f, -1.0f, 1.0f,
+                           3.0f, -1.0f, 1.0f,
+                           3.0f, 1.0f, 1.0f,
+                           3.0f, -1.0f, 1.0f,
+                           1.0f, -1.0f, 1.0f,
+                           1.0f, -1.0f, 1.0f,
+                           1.0f, 1.0f, 3.0f,
+                           1.0f, 1.0f, 1.0f,
+                           3.0f, -1.0f, 3.0f,
+                           1.0f, -1.0f, 3.0f,
+                           1.0f, -1.0f, 1.0f,
+                           1.0f, 1.0f, 3.0f,
+                           1.0f, -1.0f, 3.0f,
+                           3.0f, -1.0f, 3.0f,
+                           3.0f, 1.0f, 3.0f,
+                           3.0f, -1.0f, 1.0f,
+                           3.0f, 1.0f, 1.0f,
+                           3.0f, -1.0f, 1.0f,
+                           3.0f, 1.0f, 3.0f,
+                           3.0f, -1.0f, 3.0f,
+                           3.0f, 1.0f, 3.0f,
+                           3.0f, 1.0f, 1.0f,
+                           1.0f, 1.0f, 1.0f,
+                           3.0f, 1.0f, 3.0f,
+                           1.0f, 1.0f, 1.0f,
+                           1.0f, 1.0f, 3.0f,
+                           3.0f, 1.0f, 3.0f,
+                           1.0f, 1.0f, 3.0f,
+                           3.0f, -1.0f, 3.0f},
+                          {0.f, 1.f,
+                           1.f, 1.f,
+                           1.f, 0.f,
+                           0.f, 0.f,
+                           1.f, 1.f,
+                           1.f, 0.f,
+                           0.f, 0.f,
+                           1.f, 1.f,
+                           1.f, 0.f,
+                           0.f, 0.f,
+                           0.f, 1.f,
+                           1.f, 1.f,
+                           0.f, 1.f,
+                           1.f, 0.f,
+                           0.f, 0.f,
+                           0.f, 0.f,
+                           0.f, 1.f,
+                           1.f, 1.f,
+                           0.f, 0.f,
+                           0.f, 1.f,
+                           1.f, 1.f,
+                           0.f, 0.f,
+                           1.f, 1.f,
+                           1.f, 0.f,
+                           1.f, 1.f,
+                           0.f, 0.f,
+                           0.f, 1.f,
+                           0.f, 0.f,
+                           0.f, 1.f,
+                           1.f, 1.f,
+                           0.f, 0.f,
+                           1.f, 1.f,
+                           1.f, 0.f,
+                           1.f, 0.f,
+                           0.f, 0.f,
+                           1.f, 1.f});
+
     GLfloat theta = 0.0f, phi = 0.0f;
     glm::vec3 axis(0, 7.0f, 0.0f);
     while (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) != GLFW_PRESS && window.is_open())
@@ -212,6 +289,9 @@ int render()
 
         png2.use();
         camera.render(mesh2);
+
+        bmp1.use();
+        camera.render(mesh3);
         // camera.render(mesh2);
         // camera.render(mesh3);
 

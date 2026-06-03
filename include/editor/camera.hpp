@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <mesh.hpp>
+#include <editor/mesh.hpp>
 
 class Camera
 {
