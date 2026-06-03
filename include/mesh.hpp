@@ -7,6 +7,7 @@
 
 class Mesh
 {
+protected:
     Material material;
     std::vector<GLfloat> vertices;
     glm::mat4 model;
@@ -19,7 +20,7 @@ public:
     Mesh(const std::initializer_list<GLfloat> vertices, const char *material);
     ~Mesh();
 
-    void render(glm::mat4 mvp) const;
+    virtual void render(glm::mat4 mvp) const;
 };
 
 #endif
