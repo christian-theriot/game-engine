@@ -1,19 +1,22 @@
-#ifndef __WINDOW_HPP
-#define __WINDOW_HPP
+#ifndef __EDITOR_WINDOW_HPP
+#define __EDITOR_WINDOW_HPP
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-class Window
+namespace Editor
 {
-    GLFWwindow *window;
+    class Window
+    {
+        GLFWwindow *window;
 
-public:
-    Window();
-    ~Window();
+    public:
+        Window();
+        ~Window();
 
-    bool is_open() const;
-    GLFWwindow *get() const;
-};
+        bool is_open() const;
+        GLFWwindow *get() const;
+    };
+}
 
 #endif

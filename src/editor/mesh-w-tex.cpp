@@ -10,37 +10,37 @@ void initMeshWithUV(
     glBufferData(GL_ARRAY_BUFFER, uv.size() * sizeof(GL_FLOAT), uv.data(), GL_STATIC_DRAW);
 }
 
-MeshWithTexture::MeshWithTexture(const Material &material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv)
-    : Mesh(material, vertices),
+Editor::MeshWithTexture::MeshWithTexture(const Editor::Material &material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv)
+    : Editor::Mesh(material, vertices),
       uv(uv)
 {
     initMeshWithUV(UVBO, uv);
 }
 
-MeshWithTexture::MeshWithTexture(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv, const Material &material)
-    : Mesh(material, vertices),
+Editor::MeshWithTexture::MeshWithTexture(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv, const Editor::Material &material)
+    : Editor::Mesh(material, vertices),
       uv(uv)
 {
     initMeshWithUV(UVBO, uv);
 }
 
-MeshWithTexture::MeshWithTexture(const char *material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv)
-    : Mesh(material, vertices),
+Editor::MeshWithTexture::MeshWithTexture(const char *material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv)
+    : Editor::Mesh(material, vertices),
       uv(uv)
 {
     initMeshWithUV(UVBO, uv);
 }
 
-MeshWithTexture::MeshWithTexture(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv, const char *material)
-    : Mesh(material, vertices),
+Editor::MeshWithTexture::MeshWithTexture(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> uv, const char *material)
+    : Editor::Mesh(material, vertices),
       uv(uv)
 {
     initMeshWithUV(UVBO, uv);
 }
 
-MeshWithTexture::~MeshWithTexture() {}
+Editor::MeshWithTexture::~MeshWithTexture() {}
 
-void MeshWithTexture::render(glm::mat4 mvp) const
+void Editor::MeshWithTexture::render(glm::mat4 mvp) const
 {
     mvp = mvp * model;
     glUseProgram(material.get());

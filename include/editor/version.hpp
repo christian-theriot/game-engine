@@ -1,18 +1,21 @@
-#ifndef __VERSION_HPP
-#define __VERSION_HPP
+#ifndef __EDITOR_VERSION_HPP
+#define __EDITOR_VERSION_HPP
 
 #include <string>
 
-class Version
+namespace Editor
 {
-    int major;
-    int minor;
-    int patch;
+    class Version
+    {
+        int major;
+        int minor;
+        int patch;
 
-public:
-    Version(int major, int minor, int patch);
+    public:
+        Version(int major, int minor, int patch);
 
-    std::string get() const;
-};
+        std::string get() const;
+    };
+}
 
 #endif

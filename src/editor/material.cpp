@@ -3,22 +3,22 @@
 #include <sstream>
 #include <iostream>
 
-Material::Material()
+Editor::Material::Material()
     : program(0)
 {
 }
 
-Material::Material(const Material &material)
+Editor::Material::Material(const Editor::Material &material)
     : program(material.program)
 {
 }
 
-Material::Material(const char *filename)
+Editor::Material::Material(const char *filename)
 {
     this->operator=(filename);
 }
 
-Material &Material::operator=(const char *filename)
+Editor::Material &Editor::Material::operator=(const char *filename)
 {
     GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -102,7 +102,7 @@ Material &Material::operator=(const char *filename)
     return *this;
 }
 
-GLuint Material::get() const
+GLuint Editor::Material::get() const
 {
     return this->program;
 }

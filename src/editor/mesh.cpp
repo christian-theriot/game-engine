@@ -11,7 +11,7 @@ void initMesh(GLuint &VAO, GLuint &VBO, const std::vector<GLfloat> &vertices)
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GL_FLOAT), vertices.data(), GL_STATIC_DRAW);
 }
 
-Mesh::Mesh(const Material &material, const std::initializer_list<GLfloat> vertices)
+Editor::Mesh::Mesh(const Editor::Material &material, const std::initializer_list<GLfloat> vertices)
     : material(material),
       vertices(vertices),
       model(1.0f)
@@ -19,7 +19,7 @@ Mesh::Mesh(const Material &material, const std::initializer_list<GLfloat> vertic
     initMesh(VAO, VBO, vertices);
 }
 
-Mesh::Mesh(const std::initializer_list<GLfloat> vertices, const Material &material)
+Editor::Mesh::Mesh(const std::initializer_list<GLfloat> vertices, const Editor::Material &material)
     : material(material),
       vertices(vertices),
       model(1.0f)
@@ -27,7 +27,7 @@ Mesh::Mesh(const std::initializer_list<GLfloat> vertices, const Material &materi
     initMesh(VAO, VBO, vertices);
 }
 
-Mesh::Mesh(const char *material, const std::initializer_list<GLfloat> vertices)
+Editor::Mesh::Mesh(const char *material, const std::initializer_list<GLfloat> vertices)
     : material(material),
       vertices(vertices),
       model(1.0f)
@@ -35,7 +35,7 @@ Mesh::Mesh(const char *material, const std::initializer_list<GLfloat> vertices)
     initMesh(VAO, VBO, vertices);
 }
 
-Mesh::Mesh(const std::initializer_list<GLfloat> vertices, const char *material)
+Editor::Mesh::Mesh(const std::initializer_list<GLfloat> vertices, const char *material)
     : material(material),
       vertices(vertices),
       model(1.0f)
@@ -43,9 +43,9 @@ Mesh::Mesh(const std::initializer_list<GLfloat> vertices, const char *material)
     initMesh(VAO, VBO, vertices);
 }
 
-Mesh::~Mesh() {}
+Editor::Mesh::~Mesh() {}
 
-void Mesh::render(glm::mat4 mvp) const
+void Editor::Mesh::render(glm::mat4 mvp) const
 {
     mvp = mvp * model;
     glUseProgram(material.get());

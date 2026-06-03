@@ -1,7 +1,7 @@
 #include <editor/window.hpp>
 #include <iostream>
 
-Window::Window()
+Editor::Window::Window()
 {
     if (!glfwInit())
     {
@@ -30,16 +30,16 @@ Window::Window()
         return;
     }
 }
-Window::~Window()
+Editor::Window::~Window()
 {
     glfwTerminate();
 }
 
-GLFWwindow *Window::get() const
+GLFWwindow *Editor::Window::get() const
 {
     return this->window;
 }
-bool Window::is_open() const
+bool Editor::Window::is_open() const
 {
     return !glfwWindowShouldClose(this->window);
 }

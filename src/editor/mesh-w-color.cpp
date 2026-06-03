@@ -10,37 +10,37 @@ void initMeshWithColor(
     glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GL_FLOAT), colors.data(), GL_STATIC_DRAW);
 }
 
-MeshWithColor::MeshWithColor(const Material &material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors)
-    : Mesh(material, vertices),
+Editor::MeshWithColor::MeshWithColor(const Editor::Material &material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors)
+    : Editor::Mesh(material, vertices),
       colors(colors)
 {
     initMeshWithColor(CBO, colors);
 }
 
-MeshWithColor::MeshWithColor(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const Material &material)
-    : Mesh(material, vertices),
+Editor::MeshWithColor::MeshWithColor(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const Editor::Material &material)
+    : Editor::Mesh(material, vertices),
       colors(colors)
 {
     initMeshWithColor(CBO, colors);
 }
 
-MeshWithColor::MeshWithColor(const char *material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors)
-    : Mesh(material, vertices),
+Editor::MeshWithColor::MeshWithColor(const char *material, const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors)
+    : Editor::Mesh(material, vertices),
       colors(colors)
 {
     initMeshWithColor(CBO, colors);
 }
 
-MeshWithColor::MeshWithColor(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const char *material)
-    : Mesh(material, vertices),
+Editor::MeshWithColor::MeshWithColor(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const char *material)
+    : Editor::Mesh(material, vertices),
       colors(colors)
 {
     initMeshWithColor(CBO, colors);
 }
 
-MeshWithColor::~MeshWithColor() {}
+Editor::MeshWithColor::~MeshWithColor() {}
 
-void MeshWithColor::render(glm::mat4 mvp) const
+void Editor::MeshWithColor::render(glm::mat4 mvp) const
 {
     mvp = mvp * model;
     glUseProgram(material.get());

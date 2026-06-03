@@ -8,7 +8,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-Image::Image(const char *filename)
+Editor::Image::Image(const char *filename)
 {
     int width, height, channels;
     unsigned char *data = stbi_load(filename, &width, &height, &channels, 0);
@@ -40,12 +40,12 @@ Image::Image(const char *filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 }
 
-GLuint Image::get() const
+GLuint Editor::Image::get() const
 {
     return image;
 }
 
-void Image::use() const
+void Editor::Image::use() const
 {
     glBindTexture(GL_TEXTURE_2D, image);
 }

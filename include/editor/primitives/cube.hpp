@@ -1,0 +1,4 @@
+#ifndef __EDITOR_PRIMITIVES_CUBE_HPP
+#define __EDITOR_PRIMITIVES_CUBE_HPP
+
+#endif
