@@ -13,7 +13,7 @@ void Editor::Camera::rotate(glm::vec3 axis)
     position = axis;
     view = glm::lookAt(position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
-void Editor::Camera::render(const Mesh &mesh) const
+void Editor::Camera::render(const Renderable &mesh) const
 {
     mesh.render(projection * view);
 }

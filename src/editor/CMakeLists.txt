@@ -2,14 +2,16 @@ add_library(glad glad.c)
 target_include_directories(glad PRIVATE ${CMAKE_SOURCE_DIR}/include PUBLIC ${CMAKE_SOURCE_DIR}/include/vendor)
 
 add_library(editor
-    camera.cpp 
+    camera.cpp
     image.cpp
-    material.cpp 
-    mesh-w-color.cpp
-    mesh-w-tex.cpp
-    mesh.cpp 
+    material.cpp
+    mesh.cpp
     version.cpp
-    window.cpp 
+    window.cpp
+    primitives/line.cpp
+    primitives/cube.cpp
+    primitives/plane.cpp
+    primitives/sphere.cpp
 )
 target_include_directories(editor PUBLIC
     ${CMAKE_SOURCE_DIR}/include

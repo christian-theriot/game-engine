@@ -1,28 +1,28 @@
 #ifndef __EDITOR_MESH_HPP
 #define __EDITOR_MESH_HPP
 
+#include <editor/renderable.hpp>
 #include <editor/material.hpp>
+#include <editor/image.hpp>
 #include <glm/glm.hpp>
-#include <vector>
+#include <memory>
 
 namespace Editor
 {
-    class Mesh
+    class Mesh : public Renderable
     {
-    protected:
+        Image texture;
         Material material;
         std::vector<GLfloat> vertices;
+        std::vector<GLfloat> uvs;
         glm::mat4 model;
-        GLuint VAO, VBO;
+        GLuint VAO, VBO, UVBO;
 
     public:
-        Mesh(const Material &material, const std::initializer_list<GLfloat> vertices);
-        Mesh(const std::initializer_list<GLfloat> vertices, const Material &material);
-        Mesh(const char *material, const std::initializer_list<GLfloat> vertices);
-        Mesh(const std::initializer_list<GLfloat> vertices, const char *material);
-        ~Mesh();
+        Mesh(const char *filename, const Image &texture = "assets/textures/checkerboard.png", const Material &material = "assets/shaders/texture");
+        virtual ~Mesh() = default;
 
-        virtual void render(glm::mat4 mvp) const;
+        void render(glm::mat4 mvp) const;
     };
 }
 
