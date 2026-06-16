@@ -4,6 +4,7 @@
 #include <editor/renderable.hpp>
 #include <editor/material.hpp>
 #include <editor/image.hpp>
+#include <editor/clock.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 

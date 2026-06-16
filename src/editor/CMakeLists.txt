@@ -3,6 +3,7 @@ target_include_directories(glad PRIVATE ${CMAKE_SOURCE_DIR}/include PUBLIC ${CMA
 
 add_library(editor
     camera.cpp
+    clock.cpp
     image.cpp
     material.cpp
     mesh.cpp
