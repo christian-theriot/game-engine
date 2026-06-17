@@ -12,6 +12,7 @@
 #include <editor/primitives/line.hpp>
 #include <editor/clock.hpp>
 #include <editor/resource-manager.hpp>
+#include <editor/scene.hpp>
 
 int render();
 
@@ -80,9 +81,18 @@ int render()
     auto *png2 = static_cast<Editor::Image *>(rm.load("assets/textures/checkerboard-even.png"));
     auto *secondSphere = static_cast<Editor::Mesh *>(rm.load("assets/meshes/sphere.obj"));
 
-    assert(sphere == secondSphere);
+    auto scene = std::make_unique<Editor::Scene>("Game Level");
+    auto cubeNode = std::make_unique<Editor::SceneNode>(std::make_unique<Editor::Primitives::Cube>());
+    auto sphereNode = std::make_unique<Editor::SceneNode>(std::make_unique<Editor::Primitives::Sphere>());
 
-    sphere->setTexture(*png2);
+    cubeNode->getMesh()->setTexture(*png2);
+    cubeNode->getTransform()->setPosition(glm::vec3(2, 0, 0));
+
+    sphereNode->getMesh()->setTexture(*png2);
+    sphereNode->getTransform()->setPosition(glm::vec3(0, 0, 2));
+
+    cubeNode->addChild(std::move(sphereNode));
+    scene->addNode(std::move(cubeNode));
 
     while (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) != GLFW_PRESS && window.is_open())
     {
@@ -104,9 +114,10 @@ int render()
 
         camera.rotate(axis);
 
-        camera.render(grid);
-        // camera.render(map);
-        camera.render(*sphere);
+        camera.render(grid, Editor::Transform());
+
+        scene->update(clock.getDeltaTime());
+        scene->render(glm::mat4(1.f), camera);
 
         glfwSwapBuffers(window.get());
         glfwPollEvents();

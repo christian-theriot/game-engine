@@ -29,7 +29,7 @@ class ResourceManager {
 
 Why: Prevents duplicate loading, improves memory efficiency
 
-## 3. Scene Management - In Progress
+## 3. Scene Management - ✓ Complete
 Using Hierarchical Scene Graph approach for flexible entity hierarchy
 Future: Integrate with ECS + spatial partitioning for #10 (Hybrid)
 
@@ -52,7 +52,7 @@ float deltaTime = clock.getElapsedTime();
 ```
 Why: Your render loop lacks timing—critical for consistent gameplay
 
-## 5. Transform System
+## 5. Transform System - √ Complete
 Separate transforms from primitives:
 ```
 struct Transform {
@@ -71,6 +71,13 @@ class EventBus {
 ```
 Why: Decouples systems, reduces tight coupling
 
+## 7. Physics System
+Starting with Sphere Collision + Response (Approach #2)
+- Rigidbody component (velocity, mass, friction)
+- Sphere collision detection
+- Simple impulse resolution
+Future: migrate to hybrid physics (#9) for scalability
+
 ## Code Quality Improvements
 - Remove magic numbers → Create constants for camera bounds, speeds
 - Add error handling → Check file loading failures, GL errors
@@ -80,6 +87,6 @@ Why: Decouples systems, reduces tight coupling
 ## Priority Order
 - <s>Delta time (immediate)</s> - ✓ Complete
 - <s>Resource manager (quick win)</s> - ✓ Complete
-- Scene system (enables growth)
-- ECS (foundational refactor)
+- <s>Scene system (enables growth)</s> - ✓ Complete
 - Physics/Audio (feature expansion)
+- ECS (foundational refactor)

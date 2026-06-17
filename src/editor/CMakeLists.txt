@@ -1,6 +1,3 @@
-add_library(glad glad.c)
-target_include_directories(glad PRIVATE ${CMAKE_SOURCE_DIR}/include PUBLIC ${CMAKE_SOURCE_DIR}/include/vendor)
-
 add_library(editor
     camera.cpp
     clock.cpp
@@ -14,6 +11,8 @@ add_library(editor
     primitives/plane.cpp
     primitives/sphere.cpp
     resource-manager.cpp
+    transform.cpp
+    scene.cpp
 )
 target_include_directories(editor PUBLIC
     ${CMAKE_SOURCE_DIR}/include

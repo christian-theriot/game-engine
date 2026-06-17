@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <editor/mesh.hpp>
 #include <editor/renderable.hpp>
+#include <editor/transform.hpp>
 
 namespace Editor
 {
@@ -18,7 +19,7 @@ namespace Editor
         Camera(GLfloat fov = 45.0f, GLfloat width = 1024, GLfloat height = 768, GLfloat min = 0.01f, GLfloat max = 100.0f);
 
         void rotate(glm::vec3 axis);
-        void render(const Renderable &mesh) const;
+        void render(const Renderable &mesh, const Transform &transform) const;
     };
 }
 
