@@ -13,6 +13,7 @@ add_library(editor
     primitives/cube.cpp
     primitives/plane.cpp
     primitives/sphere.cpp
+    resource-manager.cpp
 )
 target_include_directories(editor PUBLIC
     ${CMAKE_SOURCE_DIR}/include

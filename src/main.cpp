@@ -11,6 +11,7 @@
 #include <editor/primitives/sphere.hpp>
 #include <editor/primitives/line.hpp>
 #include <editor/clock.hpp>
+#include <editor/resource-manager.hpp>
 
 int render();
 
@@ -30,10 +31,6 @@ int render()
 
     Editor::Camera camera;
 
-    Editor::Image png("assets/textures/checkerboard-even.png");
-    Editor::Image wm("assets/textures/high-resolution-world-map.png");
-
-    Editor::Primitives::Sphere map(wm);
     Editor::Primitives::Line grid({-2, 0, 0,
                                    2, 0, 0,
                                    -2, 0, -1,
@@ -77,6 +74,16 @@ int render()
 
     Editor::Clock clock;
 
+    Editor::ResourceManager rm;
+
+    auto *sphere = static_cast<Editor::Mesh *>(rm.load("assets/meshes/sphere.obj"));
+    auto *png2 = static_cast<Editor::Image *>(rm.load("assets/textures/checkerboard-even.png"));
+    auto *secondSphere = static_cast<Editor::Mesh *>(rm.load("assets/meshes/sphere.obj"));
+
+    assert(sphere == secondSphere);
+
+    sphere->setTexture(*png2);
+
     while (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) != GLFW_PRESS && window.is_open())
     {
         clock.tick();
@@ -98,11 +105,15 @@ int render()
         camera.rotate(axis);
 
         camera.render(grid);
-        camera.render(map);
+        // camera.render(map);
+        camera.render(*sphere);
 
         glfwSwapBuffers(window.get());
         glfwPollEvents();
     }
+
+    rm.unload("assets/meshes/sphere.obj");
+    rm.unload("assets/textures/checkerboard-even.png");
 
     return 0;
 }

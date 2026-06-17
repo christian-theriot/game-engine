@@ -159,3 +159,7 @@ void Editor::Mesh::render(glm::mat4 mvp) const
     glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 3);
     glDisableVertexAttribArray(0);
 }
+void Editor::Mesh::setTexture(const Image &texture)
+{
+    this->texture = texture;
+}

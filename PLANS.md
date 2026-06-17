@@ -15,7 +15,7 @@ class PhysicsComponent : public Component { /* collider, body */ };
 
 Why: More flexible, easier to add features, reduces deep inheritance chains
 
-## 2. Resource Manager
+## 2. Resource Manager - ✓ Complete
 Centralize asset loading and caching:
 
 ```
@@ -29,7 +29,10 @@ class ResourceManager {
 
 Why: Prevents duplicate loading, improves memory efficiency
 
-## 3. Scene Management
+## 3. Scene Management - In Progress
+Using Hierarchical Scene Graph approach for flexible entity hierarchy
+Future: Integrate with ECS + spatial partitioning for #10 (Hybrid)
+
 Add proper scene/level abstraction:
 
 ```
@@ -75,8 +78,8 @@ Why: Decouples systems, reduces tight coupling
 - Use smart pointers → std::unique_ptr<Entity> instead of raw pointers
 - Configuration file → YAML/JSON for settings instead of hardcoded values
 ## Priority Order
-- <s>Delta time (immediate)</s> ✓ Complete
-- Resource manager (quick win)
+- <s>Delta time (immediate)</s> - ✓ Complete
+- <s>Resource manager (quick win)</s> - ✓ Complete
 - Scene system (enables growth)
 - ECS (foundational refactor)
 - Physics/Audio (feature expansion)

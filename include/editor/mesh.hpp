@@ -24,6 +24,8 @@ namespace Editor
         virtual ~Mesh() = default;
 
         void render(glm::mat4 mvp) const;
+
+        void setTexture(const Image &texture);
     };
 }
 
