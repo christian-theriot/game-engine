@@ -12,8 +12,15 @@ add_library(editor
     primitives/sphere.cpp
     resource-manager.cpp
     transform.cpp
-    scene.cpp
     physics.cpp
+    entity.cpp
+    world.cpp
+    components/mesh.cpp
+    components/rigidbody.cpp
+    components/transform.cpp
+    systems/physics.cpp
+    systems/render.cpp
+    systems/transform.cpp
 )
 target_include_directories(editor PUBLIC
     ${CMAKE_SOURCE_DIR}/include

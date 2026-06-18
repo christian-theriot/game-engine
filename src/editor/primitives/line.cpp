@@ -15,8 +15,11 @@ void initLineMesh(GLuint &VAO, GLuint &VBO, GLuint &CBO, const std::vector<GLflo
 }
 
 Editor::Primitives::Line::Line(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const Editor::Material &material)
-    : material(material), vertices(vertices), colors(colors), model(1.0f)
+    : Editor::Mesh(nullptr, "assets/textures/checkerboard.png", material),
+      material(material),
+      colors(colors)
 {
+    this->vertices = vertices;
     initLineMesh(VAO, VBO, CBO, vertices, colors);
 }
 void Editor::Primitives::Line::render(glm::mat4 mvp) const

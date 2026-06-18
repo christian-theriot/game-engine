@@ -12,8 +12,14 @@
 #include <editor/primitives/line.hpp>
 #include <editor/clock.hpp>
 #include <editor/resource-manager.hpp>
-#include <editor/scene.hpp>
 #include <editor/physics.hpp>
+#include <editor/systems/transform.hpp>
+#include <editor/systems/render.hpp>
+#include <editor/systems/physics.hpp>
+#include <editor/components/mesh.hpp>
+#include <editor/components/transform.hpp>
+#include <editor/components/rigidbody.hpp>
+#include <editor/world.hpp>
 
 int render();
 
@@ -74,34 +80,32 @@ int render()
     GLfloat theta = 0.f;
     glm::vec3 axis(0, 7.0f, 0.0f);
 
+    Editor::World world;
     Editor::Clock clock;
 
     Editor::ResourceManager rm;
 
-    auto *sphere = static_cast<Editor::Mesh *>(rm.load("assets/meshes/sphere.obj"));
     auto *png2 = static_cast<Editor::Image *>(rm.load("assets/textures/checkerboard-even.png"));
-    auto *secondSphere = static_cast<Editor::Mesh *>(rm.load("assets/meshes/sphere.obj"));
 
-    auto scene = std::make_unique<Editor::Scene>("Game Level");
-    auto cubeNode = std::make_unique<Editor::SceneNode>(std::make_unique<Editor::Primitives::Cube>());
-    auto sphereNode = std::make_unique<Editor::SceneNode>(std::make_unique<Editor::Primitives::Sphere>());
+    auto *renderSystem = world.registerSystem<Editor::Systems::RenderSystem>();
+    auto *transformSystem = world.registerSystem<Editor::Systems::TransformSystem>();
+    auto *physicsSystem = world.registerSystem<Editor::Systems::PhysicsSystem>();
 
-    cubeNode->getMesh()->setTexture(*png2);
-    cubeNode->getTransform()->setPosition(glm::vec3(2, 0, 0));
+    Editor::Entity *sphereEntity = world.createEntity();
+    auto *sphereTransform = sphereEntity->addComponent<Editor::Components::TransformComponent>(glm::vec3(2, 0, 0));
+    auto *sphereMesh = sphereEntity->addComponent<Editor::Components::MeshComponent>(std::make_unique<Editor::Primitives::Sphere>());
+    sphereMesh->getMesh()->setTexture(*png2);
 
-    sphereNode->getMesh()->setTexture(*png2);
-    sphereNode->getTransform()->setPosition(glm::vec3(0, 0, 2));
+    Editor::Entity *cubeEntity = world.createEntity();
+    auto *cubeTransform = cubeEntity->addComponent<Editor::Components::TransformComponent>(glm::vec3(2, 0, 2));
+    cubeEntity->addComponent<Editor::Components::MeshComponent>(std::make_unique<Editor::Primitives::Cube>());
 
-    cubeNode->addChild(std::move(sphereNode));
-    scene->addNode(std::move(cubeNode));
+    Editor::Entity *gridEntity = world.createEntity();
+    auto *gridTransform = gridEntity->addComponent<Editor::Components::TransformComponent>();
+    gridEntity->addComponent<Editor::Components::MeshComponent>(std::make_unique<Editor::Primitives::Line>(grid));
 
-    Editor::Physics::PhysicsSystem physics;
-
-    auto box = Editor::Physics::ConvexHull::createBox(glm::vec3(1.f));
-    auto *bodyA = physics.addBody(glm::vec3(0, 5, 0), 1.f, box);
-
-    auto sphereHull = Editor::Physics::ConvexHull::createSphere(1.f);
-    auto *bodyB = physics.addBody(glm::vec3(3, 5, 0), 1.f, sphereHull);
+    auto cubeHull = Editor::Physics::ConvexHull::createBox(glm::vec3(1.f));
+    auto *cubePhysics = cubeEntity->addComponent<Editor::Components::RigidbodyComponent>(std::make_unique<Editor::Physics::Rigidbody>(glm::vec3(2, 0, 2), 1.f, cubeHull));
 
     while (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) != GLFW_PRESS && window.is_open())
     {
@@ -120,19 +124,9 @@ int render()
 
         camera.rotate(axis);
 
-        camera.render(grid, Editor::Transform());
-
-        physics.update(clock.getDeltaTime());
-
-        for (const auto &body : physics.getBodies())
-        {
-            glm::vec3 pos = body->getPosition();
-
-            std::cout << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
-        }
-
-        scene->update(clock.getDeltaTime());
-        scene->render(glm::mat4(1.f), camera);
+        auto viewProj = camera.getViewProjection();
+        renderSystem->setViewProjection(viewProj);
+        world.update(clock.getDeltaTime());
 
         glfwSwapBuffers(window.get());
         glfwPollEvents();

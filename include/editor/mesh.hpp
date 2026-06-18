@@ -12,6 +12,7 @@ namespace Editor
 {
     class Mesh : public Renderable
     {
+    protected:
         Image texture;
         Material material;
         std::vector<GLfloat> vertices;

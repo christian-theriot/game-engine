@@ -1,4 +1,4 @@
-## 1. Entity Component System (ECS)
+## 1. Entity Component System (ECS) - √ Complete
 Replace inheritance-based primitives with a flexible ECS architecture:
 
 ```
@@ -78,6 +78,21 @@ Starting with Sphere Collision + Response (Approach #2)
 - Simple impulse resolution
 Future: migrate to hybrid physics (#9) for scalability
 
+## 8. Audio System
+Add sound effects/music playback
+
+## 9. Input System
+Keyboard/mouse controls for entities
+
+## 10. Scripting System
+C++/Julia scripting for gameplay
+
+## 11. Optimization
+Spatial partinioning for 1000+ physics objects
+
+## 12. Advanced Graphics
+Lighting, shadows, post-processing
+
 ## Code Quality Improvements
 - Remove magic numbers → Create constants for camera bounds, speeds
 - Add error handling → Check file loading failures, GL errors
@@ -89,5 +104,5 @@ Future: migrate to hybrid physics (#9) for scalability
 - <s>Resource manager (quick win)</s> - ✓ Complete
 - <s>Scene system (enables growth)</s> - ✓ Complete
 - <s>Physics/Audio (feature expansion)</s> - √ Complete
-- ECS (foundational refactor)
+- <s>ECS (foundational refactor)</s> - √ Complete
 - Event System

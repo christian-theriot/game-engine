@@ -18,8 +18,9 @@ namespace Editor
     public:
         Camera(GLfloat fov = 45.0f, GLfloat width = 1024, GLfloat height = 768, GLfloat min = 0.01f, GLfloat max = 100.0f);
 
+        glm::mat4 getViewProjection() const;
+
         void rotate(glm::vec3 axis);
-        void render(const Renderable &mesh, const Transform &transform) const;
     };
 }
 
