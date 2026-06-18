@@ -13,6 +13,7 @@
 #include <editor/clock.hpp>
 #include <editor/resource-manager.hpp>
 #include <editor/scene.hpp>
+#include <editor/physics.hpp>
 
 int render();
 
@@ -94,12 +95,17 @@ int render()
     cubeNode->addChild(std::move(sphereNode));
     scene->addNode(std::move(cubeNode));
 
+    Editor::Physics::PhysicsSystem physics;
+
+    auto box = Editor::Physics::ConvexHull::createBox(glm::vec3(1.f));
+    auto *bodyA = physics.addBody(glm::vec3(0, 5, 0), 1.f, box);
+
+    auto sphereHull = Editor::Physics::ConvexHull::createSphere(1.f);
+    auto *bodyB = physics.addBody(glm::vec3(3, 5, 0), 1.f, sphereHull);
+
     while (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) != GLFW_PRESS && window.is_open())
     {
         clock.tick();
-        float FPS = clock.getFPS();
-        std::cout << "FPS: " << FPS << std::endl;
-
         theta += (M_PI / 4) * clock.getDeltaTime();
 
         glEnable(GL_CULL_FACE);
@@ -115,6 +121,15 @@ int render()
         camera.rotate(axis);
 
         camera.render(grid, Editor::Transform());
+
+        physics.update(clock.getDeltaTime());
+
+        for (const auto &body : physics.getBodies())
+        {
+            glm::vec3 pos = body->getPosition();
+
+            std::cout << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
+        }
 
         scene->update(clock.getDeltaTime());
         scene->render(glm::mat4(1.f), camera);

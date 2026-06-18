@@ -13,6 +13,7 @@ add_library(editor
     resource-manager.cpp
     transform.cpp
     scene.cpp
+    physics.cpp
 )
 target_include_directories(editor PUBLIC
     ${CMAKE_SOURCE_DIR}/include

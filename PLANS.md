@@ -71,7 +71,7 @@ class EventBus {
 ```
 Why: Decouples systems, reduces tight coupling
 
-## 7. Physics System
+## 7. Physics System - √ Complete
 Starting with Sphere Collision + Response (Approach #2)
 - Rigidbody component (velocity, mass, friction)
 - Sphere collision detection
@@ -88,5 +88,6 @@ Future: migrate to hybrid physics (#9) for scalability
 - <s>Delta time (immediate)</s> - ✓ Complete
 - <s>Resource manager (quick win)</s> - ✓ Complete
 - <s>Scene system (enables growth)</s> - ✓ Complete
-- Physics/Audio (feature expansion)
+- <s>Physics/Audio (feature expansion)</s> - √ Complete
 - ECS (foundational refactor)
+- Event System
