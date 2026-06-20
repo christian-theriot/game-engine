@@ -1,0 +1,15 @@
+#ifndef __ENGINE_PRIMITIVES_SPHERE_HPP
+#define __ENGINE_PRIMITIVES_SPHERE_HPP
+
+#include <engine/mesh.hpp>
+
+namespace Engine::Primitives
+{
+    class Sphere : public Mesh
+    {
+    public:
+        Sphere(Image texture = "assets/textures/checkerboard.png", const char *filename = "assets/meshes/sphere.obj");
+    };
+}
+
+#endif

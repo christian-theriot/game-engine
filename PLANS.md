@@ -1,96 +1,16 @@
-## 1. Entity Component System (ECS) - √ Complete
-Replace inheritance-based primitives with a flexible ECS architecture:
-
-```
-// Current: Cube inherits from Mesh
-// Better: Cube is an Entity with Mesh, Transform, Render components
-struct Entity {
-    std::vector<Component*> components;
-};
-
-class TransformComponent : public Component { /* position, rotation, scale */ };
-class MeshComponent : public Component { /* mesh data */ };
-class PhysicsComponent : public Component { /* collider, body */ };
-```
-
-Why: More flexible, easier to add features, reduces deep inheritance chains
-
-## 2. Resource Manager - ✓ Complete
-Centralize asset loading and caching:
-
-```
-class ResourceManager {
-    std::unordered_map<std::string, Mesh*> meshCache;
-    std::unordered_map<std::string, Image*> textureCache;
-    Mesh* getMesh(const std::string& path);
-    Image* getTexture(const std::string& path);
-};
-```
-
-Why: Prevents duplicate loading, improves memory efficiency
-
-## 3. Scene Management - ✓ Complete
-Using Hierarchical Scene Graph approach for flexible entity hierarchy
-Future: Integrate with ECS + spatial partitioning for #10 (Hybrid)
-
-Add proper scene/level abstraction:
-
-```
-class Scene {
-    std::vector<Entity> entities;
-    void update(float deltaTime);
-    void render();
-};
-```
-
-Why: Enables scene switching, saves/loads levels
-
-## 4. Delta Time & Timing - ✓ Complete
-```
-float deltaTime = clock.getElapsedTime();
-// Use for frame-rate independent updates
-```
-Why: Your render loop lacks timing—critical for consistent gameplay
-
-## 5. Transform System - √ Complete
-Separate transforms from primitives:
-```
-struct Transform {
-    glm::vec3 position, rotation, scale;
-    glm::mat4 getMatrix();
-};
-```
-Why: Enables parenting, hierarchies, animation
-
-## 6. Event System
-```
-class EventBus {
-    void subscribe(EventType, Callback);
-    void publish(Event);
-};
-```
-Why: Decouples systems, reduces tight coupling
-
-## 7. Physics System - √ Complete
-Starting with Sphere Collision + Response (Approach #2)
-- Rigidbody component (velocity, mass, friction)
-- Sphere collision detection
-- Simple impulse resolution
-Future: migrate to hybrid physics (#9) for scalability
-
-## 8. Audio System
+## 1. Audio System - √ Complete
 Add sound effects/music playback
 
-## 9. Input System
+## 2. Input System - √ Complete
 Keyboard/mouse controls for entities
 
-## 10. Scripting System
+## 3. Scripting System
 C++/Julia scripting for gameplay
 
-## 11. Optimization
+## 4. Optimization
 Spatial partinioning for 1000+ physics objects
 
-## 12. Advanced Graphics
+## 5. Advanced Graphics
 Lighting, shadows, post-processing
 
 ## Code Quality Improvements
@@ -105,4 +25,12 @@ Lighting, shadows, post-processing
 - <s>Scene system (enables growth)</s> - ✓ Complete
 - <s>Physics/Audio (feature expansion)</s> - √ Complete
 - <s>ECS (foundational refactor)</s> - √ Complete
-- Event System
+- <s>Event System</s> - √ Complete
+- <s>Input System</s> - √ Complete
+- <s>Audio System</s> - √ Complete
+- Scripting System
+- Optimization
+- Advanced Graphics
+  - Specular / Diffuse / Ambient
+  - Normal Maps
+  - MipMaps

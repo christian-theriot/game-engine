@@ -2,30 +2,33 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <editor/version.hpp>
-#include <editor/window.hpp>
-#include <editor/camera.hpp>
-#include <editor/image.hpp>
-#include <editor/primitives/cube.hpp>
-#include <editor/primitives/plane.hpp>
-#include <editor/primitives/sphere.hpp>
-#include <editor/primitives/line.hpp>
-#include <editor/clock.hpp>
-#include <editor/resource-manager.hpp>
-#include <editor/physics.hpp>
-#include <editor/systems/transform.hpp>
-#include <editor/systems/render.hpp>
-#include <editor/systems/physics.hpp>
-#include <editor/components/mesh.hpp>
-#include <editor/components/transform.hpp>
-#include <editor/components/rigidbody.hpp>
-#include <editor/world.hpp>
+#include <engine/version.hpp>
+#include <engine/window.hpp>
+#include <engine/camera.hpp>
+#include <engine/image.hpp>
+#include <engine/primitives/cube.hpp>
+#include <engine/primitives/plane.hpp>
+#include <engine/primitives/sphere.hpp>
+#include <engine/primitives/line.hpp>
+#include <engine/clock.hpp>
+#include <engine/resource-manager.hpp>
+#include <engine/physics.hpp>
+#include <engine/systems/transform.hpp>
+#include <engine/systems/render.hpp>
+#include <engine/systems/physics.hpp>
+#include <engine/components/mesh.hpp>
+#include <engine/components/transform.hpp>
+#include <engine/components/rigidbody.hpp>
+#include <engine/world.hpp>
+#include <engine/events.hpp>
+#include <engine/input.hpp>
+#include <engine/audio-manager.hpp>
 
 int render();
 
 int main(int argc, char **argv)
 {
-    Editor::Version version(1, 0, 0);
+    Engine::Version version(1, 0, 0);
     std::cout << "Game Engine v" << version.get() << std::endl;
 
     return render();
@@ -33,13 +36,14 @@ int main(int argc, char **argv)
 
 int render()
 {
-    Editor::Window window;
+    Engine::Window window;
+    Engine::EventBus events;
+    Engine::Input input(window, events);
+    Engine::AudioManager audioManager;
 
-    glfwSetInputMode(window.get(), GLFW_STICKY_KEYS, GL_TRUE);
+    Engine::Camera camera;
 
-    Editor::Camera camera;
-
-    Editor::Primitives::Line grid({-2, 0, 0,
+    Engine::Primitives::Line grid({-2, 0, 0,
                                    2, 0, 0,
                                    -2, 0, -1,
                                    2, 0, -1,
@@ -77,40 +81,75 @@ int render()
                                    2, 0, 1.5},
                                   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5, .5});
 
-    GLfloat theta = 0.f;
-    glm::vec3 axis(0, 7.0f, 0.0f);
+    Engine::World world;
+    Engine::Clock clock;
 
-    Editor::World world;
-    Editor::Clock clock;
+    Engine::ResourceManager rm;
 
-    Editor::ResourceManager rm;
+    auto *png2 = static_cast<Engine::Image *>(rm.load("assets/textures/checkerboard-even.png"));
 
-    auto *png2 = static_cast<Editor::Image *>(rm.load("assets/textures/checkerboard-even.png"));
+    auto *renderSystem = world.registerSystem<Engine::Systems::RenderSystem>();
+    auto *transformSystem = world.registerSystem<Engine::Systems::TransformSystem>();
+    auto *physicsSystem = world.registerSystem<Engine::Systems::PhysicsSystem>();
 
-    auto *renderSystem = world.registerSystem<Editor::Systems::RenderSystem>();
-    auto *transformSystem = world.registerSystem<Editor::Systems::TransformSystem>();
-    auto *physicsSystem = world.registerSystem<Editor::Systems::PhysicsSystem>();
-
-    Editor::Entity *sphereEntity = world.createEntity();
-    auto *sphereTransform = sphereEntity->addComponent<Editor::Components::TransformComponent>(glm::vec3(2, 0, 0));
-    auto *sphereMesh = sphereEntity->addComponent<Editor::Components::MeshComponent>(std::make_unique<Editor::Primitives::Sphere>());
+    Engine::Entity *sphereEntity = world.createEntity();
+    auto *sphereTransform = sphereEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(2, 0, 0));
+    auto *sphereMesh = sphereEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Sphere>());
     sphereMesh->getMesh()->setTexture(*png2);
 
-    Editor::Entity *cubeEntity = world.createEntity();
-    auto *cubeTransform = cubeEntity->addComponent<Editor::Components::TransformComponent>(glm::vec3(2, 0, 2));
-    cubeEntity->addComponent<Editor::Components::MeshComponent>(std::make_unique<Editor::Primitives::Cube>());
+    Engine::Entity *cubeEntity = world.createEntity();
+    auto *cubeTransform = cubeEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(2, 0, 2));
+    cubeEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Cube>());
 
-    Editor::Entity *gridEntity = world.createEntity();
-    auto *gridTransform = gridEntity->addComponent<Editor::Components::TransformComponent>();
-    gridEntity->addComponent<Editor::Components::MeshComponent>(std::make_unique<Editor::Primitives::Line>(grid));
+    Engine::Entity *gridEntity = world.createEntity();
+    auto *gridTransform = gridEntity->addComponent<Engine::Components::TransformComponent>();
+    gridEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Line>(grid));
 
-    auto cubeHull = Editor::Physics::ConvexHull::createBox(glm::vec3(1.f));
-    auto *cubePhysics = cubeEntity->addComponent<Editor::Components::RigidbodyComponent>(std::make_unique<Editor::Physics::Rigidbody>(glm::vec3(2, 0, 2), 1.f, cubeHull));
+    auto cubeHull = Engine::Physics::ConvexHull::createBox(glm::vec3(1.f));
+    auto *cubePhysics = cubeEntity->addComponent<Engine::Components::RigidbodyComponent>(std::make_unique<Engine::Physics::Rigidbody>(glm::vec3(2, 0, 2), 1.f, cubeHull));
 
-    while (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) != GLFW_PRESS && window.is_open())
+    float theta = 0.0001f, phi = M_PI / 4;
+    camera.rotate(7.f, {theta, phi});
+
+    audioManager.loadSound("footstep", "assets/audio/footstep-wood.wav");
+
+    events.subscribe<Engine::ScrollEvent>([&camera, &theta, &phi](const Engine::ScrollEvent &event)
+                                          {
+                                            theta += event.getX() / 20;
+                                            phi += event.getY() / 20;
+
+                                            if (phi < 0) {
+                                                phi = 0.0001f;
+                                            }
+                                            if (phi > glm::pi<float>()) {
+                                                phi = glm::pi<float>() - 0.0001f;
+                                            }
+
+                                            camera.rotate(7.f, {theta, phi}); });
+
+    events.subscribe<Engine::KeyEvent>([&window, &camera, &audioManager](const Engine::KeyEvent &event)
+                                       {
+                                        if (event.getKey() == GLFW_KEY_ESCAPE && event.getAction() == GLFW_PRESS)
+                                        {
+                                            window.close();
+                                        }
+                                        else if(event.getKey() == GLFW_KEY_LEFT && event.getAction() != GLFW_RELEASE) {
+                                            audioManager.playSound("footstep");
+                                            camera.translate(glm::vec3(-0.5f, 0, 0));
+                                        }
+                                        else if(event.getKey() == GLFW_KEY_RIGHT && event.getAction() != GLFW_RELEASE) {
+                                            camera.translate(glm::vec3(0.5f, 0, 0));
+                                        }
+                                        else if(event.getKey() == GLFW_KEY_UP && event.getAction() != GLFW_RELEASE) {
+                                            camera.translate(glm::vec3(0, 0, -0.5f));
+                                        }
+                                        else if(event.getKey() == GLFW_KEY_DOWN && event.getAction() != GLFW_RELEASE) {
+                                            camera.translate(glm::vec3(0, 0, 0.5f));
+                                        } });
+
+    while (window.is_open())
     {
         clock.tick();
-        theta += (M_PI / 4) * clock.getDeltaTime();
 
         glEnable(GL_CULL_FACE);
         glEnable(GL_DEPTH_TEST);
@@ -118,16 +157,13 @@ int render()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
-        axis.x = 7 * cos(theta);
-        axis.y = -7;
-        axis.z = 7 * sin(theta);
-
-        camera.rotate(axis);
-
         auto viewProj = camera.getViewProjection();
         renderSystem->setViewProjection(viewProj);
         world.update(clock.getDeltaTime());
 
+        events.processEvents();
+
+        audioManager.update();
         glfwSwapBuffers(window.get());
         glfwPollEvents();
     }
