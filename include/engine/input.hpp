@@ -1,6 +1,8 @@
 #ifndef __ENGINE_INPUT_HPP
 #define __ENGINE_INPUT_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/window.hpp>
 #include <engine/events.hpp>
 #include <GLFW/glfw3.h>

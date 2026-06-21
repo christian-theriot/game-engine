@@ -1,21 +1,12 @@
-## 1. Audio System - √ Complete
-Add sound effects/music playback
-
-## 2. Input System - √ Complete
-Keyboard/mouse controls for entities
-
-## 3. Scripting System - √ Complete
-Lua (sol2) scripting for gameplay - WebAssembly backend planned next
-
-## 4. Advanced Graphics
+## 1. Advanced Graphics
 Lighting, shadows, post-processing
 
-## 5. Data Serialization - 🚧 In Progress
+## 2. Data Serialization - 🚧 In Progress
 - Serialize components
 - Serialize entities
 - Unserialize entities
 
-## 6. Immediate Mode Editor
+## 3. Immediate Mode Editor
 - Panels for creating, editing, saving scenes
 - Creating & moving objects, setting properties on their components
 - docking of panels, with an OpenGL context for the editor/game preview
@@ -33,19 +24,19 @@ Lighting, shadows, post-processing
 - <s>Delta time (immediate)</s> - ✓ Complete
 - <s>Resource manager (quick win)</s> - ✓ Complete
 - <s>Scene system (enables growth)</s> - ✓ Complete
-- <s>Physics/Audio (feature expansion)</s> - √ Complete
-- <s>ECS (foundational refactor)</s> - √ Complete
-- <s>Event System</s> - √ Complete
-- <s>Input System</s> - √ Complete
-- <s>Audio System</s> - √ Complete
-- Scripting System - 🚧 In Progress
-  - <s>Lua (sol2)</s> - √ Complete
-  - <s>WebAssembly (Wasmtime)</s> - √ Complete
-  - <s>Runtime + loading + instantiation</s> - √ Complete
-  - Entity manipulation
-    - setPosition
-    - setRotation
-    - setScale
+- <s>Physics/Audio (feature expansion)</s> - ✓ Complete
+- <s>ECS (foundational refactor)</s> - ✓ Complete
+- <s>Event System</s> - ✓ Complete
+- <s>Input System</s> - ✓ Complete
+- <s>Audio System</s> - ✓ Complete
+- <s>Scripting System</s> - ✓ Complete
+  - <s>Lua (sol2)</s> - ✓ Complete
+  - <s>WebAssembly (Wasmtime)</s> - ✓ Complete
+  - <s>Runtime + loading + instantiation</s> - ✓ Complete
+  - <s>Entity manipulation</s> - ✓ Complete
+    - <s>setPosition</s> - ✓ Complete
+    - <s>setRotation</s> - ✓ Complete
+    - <s>setScale</s> - ✓ Complete
 - Data serialization - 🚧 In Progress
 - Immediate mode Editor
 - Advanced Graphics

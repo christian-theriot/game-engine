@@ -20,22 +20,62 @@ void Engine::LuaBindings::bindAll(sol::state &lua, World *world)
                                 "y", &glm::vec3::y,
                                 "z", &glm::vec3::z);
 
-    lua.new_usertype<Engine::Entity>("Entity", "findById", [world](uint64_t id) -> Entity *
-                                     {
-                                         auto* entity = world->getEntityById(id);
-                                         if (!entity) {
-                                            std::cerr << "[Lua] Entity with ID " << id << " not found" << std::endl;
-                                            return nullptr;
-                                         }
-                                        return entity; }, "getId", [](Entity *entity)
-                                     { return entity ? entity->getId() : 0; }, "setPosition", [world](Entity *entity, const glm::vec3 &pos)
-                                     {
-                                        if (entity && entity->hasComponent<Engine::Components::TransformComponent>()) {
-                                            auto* transform = entity->getComponent<Engine::Components::TransformComponent>();
-                                            transform->getTransform()->setPosition(pos);
-                                        } else {
-                                            std::cerr << "[Lua] Entity does not have a TransformComponent or is null" << std::endl; // LCOV_EXCL_LINE
-                                        } });
+    auto luaEntityType = lua.new_usertype<Engine::Entity>("Entity");
+
+    luaEntityType["findById"] = [world](uint64_t id) -> Entity *
+    {
+        auto *entity = world->getEntityById(id);
+        if (!entity)
+        {
+            std::cerr << "[Lua] Entity with ID " << id << " not found" << std::endl;
+            return nullptr;
+        }
+        return entity;
+    };
+
+    luaEntityType["getId"] = [](Entity *entity)
+    {
+        return entity ? entity->getId() : 0;
+    };
+
+    luaEntityType["setPosition"] = [world](Entity *entity, const glm::vec3 &pos)
+    {
+        if (entity && entity->hasComponent<Engine::Components::TransformComponent>())
+        {
+            auto *transform = entity->getComponent<Engine::Components::TransformComponent>();
+            transform->getTransform()->setPosition(pos);
+        }
+        else
+        {
+            std::cerr << "[Lua] Entity does not have a TransformComponent or is null" << std::endl; // LCOV_EXCL_LINE
+        }
+    };
+
+    luaEntityType["setRotation"] = [world](Entity *entity, const glm::vec3 &rot)
+    {
+        if (entity && entity->hasComponent<Engine::Components::TransformComponent>())
+        {
+            auto *transform = entity->getComponent<Engine::Components::TransformComponent>();
+            transform->getTransform()->setRotation(rot);
+        }
+        else
+        {
+            std::cerr << "[Lua] Entity does not have a TransformComponent or is null" << std::endl; // LCOV_EXCL_LINE
+        }
+    };
+
+    luaEntityType["setScale"] = [world](Entity *entity, const glm::vec3 &scale)
+    {
+        if (entity && entity->hasComponent<Engine::Components::TransformComponent>())
+        {
+            auto *transform = entity->getComponent<Engine::Components::TransformComponent>();
+            transform->getTransform()->setScale(scale);
+        }
+        else
+        {
+            std::cerr << "[Lua] Entity does not have a TransformComponent or is null" << std::endl; // LCOV_EXCL_LINE
+        }
+    };
 }
 
 wasm_trap_t *hostAbort(void *env, wasmtime_caller_t *caller, const wasmtime_val_t *args, size_t nargs, wasmtime_val_t *results, size_t nresults)
@@ -128,6 +168,66 @@ wasm_trap_t *setEntityPosition(void *env, wasmtime_caller_t *caller, const wasmt
     return nullptr;
 }
 
+wasm_trap_t *setEntityRotation(void *env, wasmtime_caller_t *caller, const wasmtime_val_t *args, size_t nargs, wasmtime_val_t *results, size_t nresults)
+{
+    if (nargs != 4)
+        return nullptr;
+
+    int32_t id = args[0].of.i32;
+    float x = args[1].of.f32;
+    float y = args[2].of.f32;
+    float z = args[3].of.f32;
+    Engine::World *world = static_cast<Engine::World *>(env);
+    Engine::Entity *entity = world->getEntityById(id);
+    if (!entity)
+    {
+        std::cerr << "[Wasm] Entity with ID " << id << " not found" << std::endl;
+    }
+    else
+    {
+        if (entity->hasComponent<Engine::Components::TransformComponent>())
+        {
+            auto *transform = entity->getComponent<Engine::Components::TransformComponent>();
+            transform->getTransform()->setRotation(glm::vec3(x, y, z));
+        }
+        else
+        {
+            std::cerr << "[Wasm] Entity with ID " << id << " does not have a TransformComponent" << std::endl;
+        }
+    }
+    return nullptr;
+}
+
+wasm_trap_t *setEntityScale(void *env, wasmtime_caller_t *caller, const wasmtime_val_t *args, size_t nargs, wasmtime_val_t *results, size_t nresults)
+{
+    if (nargs != 4)
+        return nullptr;
+
+    int32_t id = args[0].of.i32;
+    float x = args[1].of.f32;
+    float y = args[2].of.f32;
+    float z = args[3].of.f32;
+    Engine::World *world = static_cast<Engine::World *>(env);
+    Engine::Entity *entity = world->getEntityById(id);
+    if (!entity)
+    {
+        std::cerr << "[Wasm] Entity with ID " << id << " not found" << std::endl;
+    }
+    else
+    {
+        if (entity->hasComponent<Engine::Components::TransformComponent>())
+        {
+            auto *transform = entity->getComponent<Engine::Components::TransformComponent>();
+            transform->getTransform()->setScale(glm::vec3(x, y, z));
+        }
+        else
+        {
+            std::cerr << "[Wasm] Entity with ID " << id << " does not have a TransformComponent" << std::endl;
+        }
+    }
+    return nullptr;
+}
+
 void Engine::WasmBindings::bindAll(std::vector<wasmtime_extern_t> &wasmExports, Engine::WasmScriptingEngine *self)
 {
     auto context = self->getContext();
@@ -163,8 +263,12 @@ void Engine::WasmBindings::bindAll(std::vector<wasmtime_extern_t> &wasmExports, 
     exportsMap["log"] = makeFunc({wasm_valtype_new(WASM_I32), wasm_valtype_new(WASM_I32)}, {}, hostLog);
     exportsMap["getEntityById"] = makeFunc({wasm_valtype_new(WASM_I32)}, {wasm_valtype_new(WASM_I32)}, getEntityById);
     exportsMap["setEntityPosition"] = makeFunc({wasm_valtype_new(WASM_I32), wasm_valtype_new(WASM_F32), wasm_valtype_new(WASM_F32), wasm_valtype_new(WASM_F32)}, {}, setEntityPosition);
+    exportsMap["setEntityRotation"] = makeFunc({wasm_valtype_new(WASM_I32), wasm_valtype_new(WASM_F32), wasm_valtype_new(WASM_F32), wasm_valtype_new(WASM_F32)}, {}, setEntityRotation);
+    exportsMap["setEntityScale"] = makeFunc({wasm_valtype_new(WASM_I32), wasm_valtype_new(WASM_F32), wasm_valtype_new(WASM_F32), wasm_valtype_new(WASM_F32)}, {}, setEntityScale);
 
     wasmExports.push_back(exportsMap["abort"]);
+    wasmExports.push_back(exportsMap["setEntityScale"]);
+    wasmExports.push_back(exportsMap["setEntityRotation"]);
     wasmExports.push_back(exportsMap["setEntityPosition"]);
     wasmExports.push_back(exportsMap["log"]);
     wasmExports.push_back(exportsMap["getEntityById"]);
