@@ -1,6 +1,8 @@
 #ifndef __ENGINE_SYSTEMS_TRANSFORM_HPP
 #define __ENGINE_SYSTEMS_TRANSFORM_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/system.hpp>
 
 namespace Engine::Systems

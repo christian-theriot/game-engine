@@ -1,3 +1,7 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
+
 #include <engine/world.hpp>
 #include <iostream>
 

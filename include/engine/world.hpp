@@ -1,6 +1,8 @@
 #ifndef __ENGINE_WORLD_HPP
 #define __ENGINE_WORLD_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/entity.hpp>
 #include <engine/system.hpp>
 #include <vector>

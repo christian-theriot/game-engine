@@ -1,6 +1,8 @@
 #ifndef __ENGINE_SYSTEM_HPP
 #define __ENGINE_SYSTEM_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 namespace Engine
 {
     class World;

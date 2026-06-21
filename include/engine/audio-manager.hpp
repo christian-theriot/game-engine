@@ -1,6 +1,8 @@
 #ifndef __ENGINE_AUDIO_MANAGER_HPP
 #define __ENGINE_AUDIO_MANAGER_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <memory>

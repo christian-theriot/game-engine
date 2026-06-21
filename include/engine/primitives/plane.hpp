@@ -1,6 +1,8 @@
 #ifndef __ENGINE_PRIMITIVES_PLANE_HPP
 #define __ENGINE_PRIMITIVES_PLANE_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/mesh.hpp>
 
 namespace Engine::Primitives

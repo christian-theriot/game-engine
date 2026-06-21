@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/resource-manager.hpp>
 #include <engine/mesh.hpp>
 #include <engine/image.hpp>

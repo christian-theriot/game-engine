@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/audio-manager.hpp>
 #include <glm/glm.hpp>
 #include <iostream>

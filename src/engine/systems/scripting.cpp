@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/systems/scripting.hpp>
 #include <engine/components/scripting.hpp>
 #include <engine/world.hpp>

@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/systems/physics.hpp>
 #include <engine/world.hpp>
 #include <engine/components/rigidbody.hpp>

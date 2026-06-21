@@ -1,6 +1,8 @@
 #ifndef __ENGINE_CAMERA_HPP
 #define __ENGINE_CAMERA_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <engine/mesh.hpp>

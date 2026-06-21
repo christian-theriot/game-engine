@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/components/mesh.hpp>
 
 Engine::Components::MeshComponent::MeshComponent(std::unique_ptr<Mesh> mesh)

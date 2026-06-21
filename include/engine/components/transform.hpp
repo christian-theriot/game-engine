@@ -1,6 +1,8 @@
 #ifndef __ENGINE_COMPONENTS_TRANSFORM_HPP
 #define __ENGINE_COMPONENTS_TRANSFORM_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/component.hpp>
 #include <engine/transform.hpp>
 

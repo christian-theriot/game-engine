@@ -1,6 +1,8 @@
 #ifndef __ENGINE_PRIMITIVES_SPHERE_HPP
 #define __ENGINE_PRIMITIVES_SPHERE_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/mesh.hpp>
 
 namespace Engine::Primitives

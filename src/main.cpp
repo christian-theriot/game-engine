@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

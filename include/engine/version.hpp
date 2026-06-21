@@ -1,6 +1,8 @@
 #ifndef __ENGINE_VERSION_HPP
 #define __ENGINE_VERSION_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <string>
 
 namespace Engine

@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/image.hpp>
 #include <fstream>
 #include <sstream>

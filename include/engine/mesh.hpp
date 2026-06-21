@@ -1,6 +1,8 @@
 #ifndef __ENGINE_MESH_HPP
 #define __ENGINE_MESH_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/renderable.hpp>
 #include <engine/material.hpp>
 #include <engine/image.hpp>

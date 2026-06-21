@@ -1,6 +1,8 @@
 #ifndef __ENGINE_EVENTS_HPP
 #define __ENGINE_EVENTS_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <memory>
 #include <typeindex>
 #include <vector>

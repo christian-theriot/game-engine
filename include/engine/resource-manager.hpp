@@ -1,6 +1,8 @@
 #ifndef __ENGINE_RESOURCE_MANAGER_HPP
 #define __ENGINE_RESOURCE_MANAGER_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <string>
 #include <memory>
 #include <unordered_map>

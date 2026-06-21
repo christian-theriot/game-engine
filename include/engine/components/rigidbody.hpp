@@ -1,6 +1,8 @@
 #ifndef __ENGINE_COMPONENTS_RIGIDBODY_HPP
 #define __ENGINE_COMPONENTS_RIGIDBODY_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/component.hpp>
 #include <glm/glm.hpp>
 #include <memory>

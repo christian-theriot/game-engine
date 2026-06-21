@@ -1,6 +1,8 @@
 #ifndef __ENGINE_ENTITY_HPP
 #define __ENGINE_ENTITY_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/component.hpp>
 #include <unordered_map>
 #include <string>

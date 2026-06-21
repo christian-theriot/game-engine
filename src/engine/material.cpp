@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/material.hpp>
 #include <fstream>
 #include <sstream>

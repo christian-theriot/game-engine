@@ -1,6 +1,8 @@
 #ifndef __ENGINE_SYSTEMS_SCRIPTING_HPP
 #define __ENGINE_SYSTEMS_SCRIPTING_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/scripting.hpp>
 #include <engine/system.hpp>
 #include <engine/components/scripting.hpp>

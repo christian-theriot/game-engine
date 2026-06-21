@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/components/rigidbody.hpp>
 Engine::Components::RigidbodyComponent::RigidbodyComponent(const glm::vec3 &halfExtents, float mass, bool isStatic)
     : handle(0),

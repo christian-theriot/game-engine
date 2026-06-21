@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/camera.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

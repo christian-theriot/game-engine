@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/primitives/line.hpp>
 
 void initLineMesh(GLuint &VAO, GLuint &VBO, GLuint &CBO, const std::vector<GLfloat> &vertices, const std::vector<GLfloat> &colors)

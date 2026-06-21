@@ -1,6 +1,8 @@
 #ifndef __ENGINE_WINDOW_HPP
 #define __ENGINE_WINDOW_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <memory>

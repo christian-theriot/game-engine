@@ -1,6 +1,8 @@
 #ifndef __ENGINE_CLOCK_HPP
 #define __ENGINE_CLOCK_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <chrono>
 
 namespace Engine

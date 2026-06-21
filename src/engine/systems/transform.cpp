@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/systems/transform.hpp>
 #include <engine/components/transform.hpp>
 #include <engine/components/mesh.hpp>

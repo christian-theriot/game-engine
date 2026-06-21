@@ -1,6 +1,8 @@
 #ifndef __ENGINE_SCRIPTING_HPP
 #define __ENGINE_SCRIPTING_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <sol/sol.hpp>
 #include <wasmtime.h>
 #include <string>

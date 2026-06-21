@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/bindings.hpp>
 #include <engine/components/transform.hpp>
 #include <engine/transform.hpp>
@@ -116,7 +119,6 @@ wasm_trap_t *setEntityPosition(void *env, wasmtime_caller_t *caller, const wasmt
         {
             auto *transform = entity->getComponent<Engine::Components::TransformComponent>();
             transform->getTransform()->setPosition(glm::vec3(x, y, z));
-            std::cout << "[Wasm] Set position of entity " << id << " to (" << x << ", " << y << ", " << z << ")" << std::endl;
         }
         else
         {

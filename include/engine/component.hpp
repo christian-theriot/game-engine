@@ -1,6 +1,8 @@
 #ifndef __ENGINE_COMPONENT_HPP
 #define __ENGINE_COMPONENT_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 namespace Engine
 {
     class Component

@@ -1,6 +1,8 @@
 #ifndef __ENGINE_BINDINGS_HPP
 #define __ENGINE_BINDINGS_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/scripting.hpp>
 #include <sol/sol.hpp>
 #include <wasmtime.h>

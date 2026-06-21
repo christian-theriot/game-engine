@@ -1,6 +1,8 @@
 #ifndef __ENGINE_TRANSFORM_HPP
 #define __ENGINE_TRANSFORM_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 

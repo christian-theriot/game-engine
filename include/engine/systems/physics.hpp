@@ -1,6 +1,8 @@
 #ifndef __ENGINE_SYSTEMS_PHYSICS_HPP
 #define __ENGINE_SYSTEMS_PHYSICS_HPP
-
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
 #include <engine/system.hpp>
 
 #include <Jolt/Jolt.h>
