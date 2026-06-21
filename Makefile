@@ -43,3 +43,6 @@ compile-wasm:
 
 objdump-wasm:
 	@wasm-objdump -x assets/wasm/${file}.wasm | grep -A 20 "Import"
+
+debug:
+	@lldb build/src/game-engine

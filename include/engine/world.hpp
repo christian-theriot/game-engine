@@ -23,6 +23,8 @@ namespace Engine
 
         const std::vector<std::shared_ptr<Entity>> &getEntities() const;
 
+        Entity *getEntityById(uint64_t id) const;
+
         template <typename T, typename... Args>
         T *registerSystem(Args &&...args)
         {

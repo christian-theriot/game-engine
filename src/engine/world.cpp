@@ -18,6 +18,19 @@ void Engine::World::destroyEntity(Entity *entity)
         entities.erase(item);
     }
 }
+Engine::Entity *Engine::World::getEntityById(uint64_t id) const
+{
+    auto item = std::find_if(entities.begin(), entities.end(),
+                             [id](const std::shared_ptr<Entity> &e)
+                             { return e && e->getId() == id; });
+
+    if (item != entities.end())
+    {
+        return item->get();
+    }
+
+    return nullptr;
+}
 const std::vector<std::shared_ptr<Engine::Entity>> &Engine::World::getEntities() const
 {
     return entities;
