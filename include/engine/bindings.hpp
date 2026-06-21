@@ -10,10 +10,10 @@ namespace Engine
 {
     class World;
 
-    template <typename T, typename Self = World>
+    template <typename T, typename State = World>
     struct IScriptBindings
     {
-        virtual void bindAll(T &language, Self *self) = 0;
+        virtual void bindAll(T &language, State *state) = 0;
     };
 
     struct LuaBindings : public IScriptBindings<sol::state>

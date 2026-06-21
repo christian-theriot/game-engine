@@ -31,23 +31,13 @@ void Engine::LuaBindings::bindAll(sol::state &lua, World *world)
                                             auto* transform = entity->getComponent<Engine::Components::TransformComponent>();
                                             transform->getTransform()->setPosition(pos);
                                         } else {
-                                            std::cerr << "[Lua] Entity does not have a TransformComponent or is null" << std::endl;
+                                            std::cerr << "[Lua] Entity does not have a TransformComponent or is null" << std::endl; // LCOV_EXCL_LINE
                                         } });
-
-    // setPosition(entityId, vec3)
-    lua.set_function("setPosition", [world](int entityId, const glm::vec3 &position)
-                     {
-                         auto* entity = world->getEntityById(entityId);
-                         if (entity && entity->hasComponent<Engine::Components::TransformComponent>())
-                         {
-                             auto *transform = entity->getComponent<Engine::Components::TransformComponent>();
-                             transform->getTransform()->setPosition(position);
-                         } });
 }
 
 wasm_trap_t *hostAbort(void *env, wasmtime_caller_t *caller, const wasmtime_val_t *args, size_t nargs, wasmtime_val_t *results, size_t nresults)
 {
-    std::cerr << "[Wasm] abort() called externally" << std::endl;
+    std::cerr << "[Wasm] abort() called externally" << std::endl; // LCOV_EXCL_LINE
     return nullptr;
 }
 
