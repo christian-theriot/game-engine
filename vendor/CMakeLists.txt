@@ -6,6 +6,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/jrouwe/JoltPhysics.git
     GIT_TAG v5.3.0
     SOURCE_SUBDIR Build
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(JoltPhysics)
 
@@ -13,6 +14,7 @@ FetchContent_Declare(
     lua
     GIT_REPOSITORY https://github.com/lua/lua.git
     GIT_TAG v5.4.7
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(lua)
 
@@ -26,12 +28,14 @@ FetchContent_Declare(
     sol2
     GIT_REPOSITORY https://github.com/ThePhD/sol2.git
     GIT_TAG v3.5.0
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(sol2)
 
 FetchContent_Declare(
     wasmtime
     URL https://github.com/bytecodealliance/wasmtime/releases/download/v25.0.0/wasmtime-v25.0.0-aarch64-macos-c-api.tar.xz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(wasmtime)
 
