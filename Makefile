@@ -5,7 +5,7 @@ setup:
 	@rm -rf build
 	@cmake -B build
 
-setup-test:
+setup-tests:
 	@rm -rf build
 	@cmake -B build -DENABLE_COVERAGE=ON
 
@@ -31,6 +31,8 @@ coverage: test
 	@genhtml build/coverage.info \
 		--output-directory build/coverage_report \
 		--ignore-errors inconsistent,source,category
+
+show-coverage: coverage
 	@open build/coverage_report/index.html
 
 convert:
