@@ -16,7 +16,6 @@ namespace Engine
 
     public:
         Entity();
-        ~Entity() = default;
 
         uint64_t getId() const;
 

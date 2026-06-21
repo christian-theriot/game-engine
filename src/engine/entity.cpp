@@ -1,4 +1,6 @@
 #include <engine/entity.hpp>
+#include <engine/components/scripting.hpp>
+#include <engine/scripting.hpp>
 
 uint64_t Engine::Entity::nextId = 1;
 

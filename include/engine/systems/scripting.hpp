@@ -1,0 +1,29 @@
+#ifndef __ENGINE_SYSTEMS_SCRIPTING_HPP
+#define __ENGINE_SYSTEMS_SCRIPTING_HPP
+
+#include <engine/scripting.hpp>
+#include <engine/system.hpp>
+#include <engine/components/scripting.hpp>
+#include <memory>
+
+namespace Engine::Systems
+{
+    class LuaScriptingSystem : public System
+    {
+        std::unique_ptr<Engine::LuaScriptingEngine> scriptingEngine;
+        World *world;
+
+    public:
+        explicit LuaScriptingSystem(World *world);
+        ~LuaScriptingSystem();
+
+        void init();
+        void update(World *world, float deltaTime);
+
+        bool load(Engine::Components::LuaScriptComponent *component, const std::string &path);
+
+        LuaScriptingEngine &getScriptingEngine();
+    };
+}
+
+#endif

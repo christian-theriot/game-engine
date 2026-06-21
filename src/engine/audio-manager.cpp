@@ -136,8 +136,6 @@ void Engine::AudioManager::playSound(const char *name, float volume)
     alSourcei(source, AL_BUFFER, item->second);
     alSourcePlay(source);
     sources.push_back(source);
-
-    std::cout << "Playing sound: " << name << " (source: " << source << ")" << std::endl;
 }
 void Engine::AudioManager::stopAllSounds()
 {
@@ -165,7 +163,6 @@ void Engine::AudioManager::update()
         }
         else
         {
-            std::cout << state << std::endl;
             alSourceStop(source);
             alDeleteSources(1, &source);
         }

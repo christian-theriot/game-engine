@@ -2,18 +2,27 @@
 #define __ENGINE_COMPONENTS_RIGIDBODY_HPP
 
 #include <engine/component.hpp>
-#include <engine/physics.hpp>
+#include <glm/glm.hpp>
+#include <memory>
 
 namespace Engine::Components
 {
     class RigidbodyComponent : public Component
     {
-        std::unique_ptr<Engine::Physics::Rigidbody> rigidbody;
+        uint32_t handle;
+        glm::vec3 halfExtents;
+        float mass;
+        bool isStatic;
 
     public:
-        RigidbodyComponent(std::unique_ptr<Engine::Physics::Rigidbody> body);
-        Engine::Physics::Rigidbody *getRigidbody() const;
-        void setRigidbody(std::unique_ptr<Engine::Physics::Rigidbody> body);
+        RigidbodyComponent(const glm::vec3 &halfExtents, float mass = 1.f, bool isStatic = false);
+
+        void setHandle(uint32_t handle);
+        uint32_t getHandle() const;
+
+        const glm::vec3 &getHalfExtents() const;
+        float getMass() const;
+        bool getIsStatic() const;
     };
 }
 

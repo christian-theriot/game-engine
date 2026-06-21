@@ -4,8 +4,8 @@ Add sound effects/music playback
 ## 2. Input System - √ Complete
 Keyboard/mouse controls for entities
 
-## 3. Scripting System
-C++/Julia scripting for gameplay
+## 3. Scripting System - √ Complete
+Lua (sol2) scripting for gameplay - WebAssembly backend planned next
 
 ## 4. Optimization
 Spatial partinioning for 1000+ physics objects
@@ -28,7 +28,7 @@ Lighting, shadows, post-processing
 - <s>Event System</s> - √ Complete
 - <s>Input System</s> - √ Complete
 - <s>Audio System</s> - √ Complete
-- Scripting System
+- <s>Scripting System</s> - √ Complete
 - Optimization
 - Advanced Graphics
   - Specular / Diffuse / Ambient

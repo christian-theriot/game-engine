@@ -1,14 +1,28 @@
 #include <engine/components/rigidbody.hpp>
-
-Engine::Components::RigidbodyComponent::RigidbodyComponent(std::unique_ptr<Engine::Physics::Rigidbody> body)
-    : rigidbody(std::move(body))
+Engine::Components::RigidbodyComponent::RigidbodyComponent(const glm::vec3 &halfExtents, float mass, bool isStatic)
+    : handle(0),
+      halfExtents(halfExtents),
+      mass(mass),
+      isStatic(isStatic)
 {
 }
-Engine::Physics::Rigidbody *Engine::Components::RigidbodyComponent::getRigidbody() const
+void Engine::Components::RigidbodyComponent::setHandle(uint32_t handle)
 {
-    return rigidbody.get();
+    this->handle = handle;
 }
-void Engine::Components::RigidbodyComponent::setRigidbody(std::unique_ptr<Engine::Physics::Rigidbody> body)
+uint32_t Engine::Components::RigidbodyComponent::getHandle() const
 {
-    rigidbody = std::move(body);
+    return handle;
+}
+const glm::vec3 &Engine::Components::RigidbodyComponent::getHalfExtents() const
+{
+    return halfExtents;
+}
+float Engine::Components::RigidbodyComponent::getMass() const
+{
+    return mass;
+}
+bool Engine::Components::RigidbodyComponent::getIsStatic() const
+{
+    return isStatic;
 }

@@ -2,6 +2,7 @@
 #define __ENGINE_TRANSFORM_HPP
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace Engine
 {
@@ -24,6 +25,7 @@ namespace Engine
 
         void setPosition(const glm::vec3 &pos);
         void setRotation(const glm::vec3 &rot);
+        void setRotation(const glm::quat &rot);
         void setScale(const glm::vec3 &newScale);
 
         void update(const glm::mat4 &parentMatrix = 1.f);

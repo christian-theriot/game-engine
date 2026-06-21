@@ -1,4 +1,5 @@
 #include <engine/world.hpp>
+#include <iostream>
 
 Engine::Entity *Engine::World::createEntity()
 {

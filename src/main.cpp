@@ -12,13 +12,14 @@
 #include <engine/primitives/line.hpp>
 #include <engine/clock.hpp>
 #include <engine/resource-manager.hpp>
-#include <engine/physics.hpp>
 #include <engine/systems/transform.hpp>
 #include <engine/systems/render.hpp>
 #include <engine/systems/physics.hpp>
+#include <engine/systems/scripting.hpp>
+#include <engine/components/scripting.hpp>
+#include <engine/components/rigidbody.hpp>
 #include <engine/components/mesh.hpp>
 #include <engine/components/transform.hpp>
-#include <engine/components/rigidbody.hpp>
 #include <engine/world.hpp>
 #include <engine/events.hpp>
 #include <engine/input.hpp>
@@ -91,31 +92,69 @@ int render()
     auto *renderSystem = world.registerSystem<Engine::Systems::RenderSystem>();
     auto *transformSystem = world.registerSystem<Engine::Systems::TransformSystem>();
     auto *physicsSystem = world.registerSystem<Engine::Systems::PhysicsSystem>();
+    auto *luaScriptingSystem = world.registerSystem<Engine::Systems::LuaScriptingSystem>(&world);
 
     Engine::Entity *sphereEntity = world.createEntity();
     auto *sphereTransform = sphereEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(2, 0, 0));
     auto *sphereMesh = sphereEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Sphere>());
+    auto *sphereLua = sphereEntity->addComponent<Engine::Components::LuaScriptComponent>();
+    luaScriptingSystem->load(sphereLua, "assets/lua/spinner.lua");
     sphereMesh->getMesh()->setTexture(*png2);
 
-    Engine::Entity *cubeEntity = world.createEntity();
-    auto *cubeTransform = cubeEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(2, 0, 2));
-    cubeEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Cube>());
+    float chi = 0.f;
+    for (size_t i = 0; i < 5; i++)
+    {
+        Engine::Entity *cubeEntity = world.createEntity();
+        auto *cubeTransform = cubeEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(-5 * cos(chi), 10 + i * 5, 5 * sin(chi)));
+        chi += M_PI / 8;
+        cubeEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Cube>());
+        auto *cubeRb = cubeEntity->addComponent<Engine::Components::RigidbodyComponent>(glm::vec3(1.f));
+        uint32_t cubeHandle = physicsSystem->createBox(cubeTransform->getTransform()->getPosition(), cubeRb->getHalfExtents(), cubeRb->getMass(), cubeRb->getIsStatic());
+        cubeRb->setHandle(cubeHandle);
+        physicsSystem->setRestitution(cubeHandle, 0.05f);
+        physicsSystem->setFriction(cubeHandle, 0.8f);
+    }
+
+    // Engine::Entity *cubeEntity = world.createEntity();
+    // auto *cubeTransform = cubeEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(2, 10, 2));
+    // cubeEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Cube>());
+    // auto *cubeRb = cubeEntity->addComponent<Engine::Components::RigidbodyComponent>(glm::vec3(1.f));
+    // uint32_t cubeHandle = physicsSystem->createBox(cubeTransform->getTransform()->getPosition(), cubeRb->getHalfExtents(), cubeRb->getMass(), cubeRb->getIsStatic());
+    // cubeRb->setHandle(cubeHandle);
+    // physicsSystem->setRestitution(cubeHandle, 0.05f);
+    // physicsSystem->setFriction(cubeHandle, 0.8f);
+
+    // Engine::Entity *cube2Entity = world.createEntity();
+    // auto *cube2Transform = cube2Entity->addComponent<Engine::Components::TransformComponent>(glm::vec3(3.f, 13, 2.5f));
+    // cube2Entity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Cube>());
+    // auto *cube2Rb = cube2Entity->addComponent<Engine::Components::RigidbodyComponent>(glm::vec3(1.f));
+    // uint32_t cube2Handle = physicsSystem->createBox(cube2Transform->getTransform()->getPosition(), cube2Rb->getHalfExtents(), cube2Rb->getMass(), cube2Rb->getIsStatic());
+    // cube2Rb->setHandle(cube2Handle);
+    // physicsSystem->setRestitution(cube2Handle, 0.05f);
+    // physicsSystem->setFriction(cube2Handle, 0.8f);
+    // // physicsSystem->setAngularDamping(cube2Handle, 0.5f);
+
+    Engine::Entity *planeEntity = world.createEntity();
+    auto *planeTransform = planeEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(0, -2, 0));
+    planeEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Plane>());
+    planeTransform->getTransform()->setScale(glm::vec3(10, 1.f, 10));
+    auto *planeRb = planeEntity->addComponent<Engine::Components::RigidbodyComponent>(glm::vec3(10.f, 1.f, 10.f), 0.f, true);
+    uint32_t planeHandle = physicsSystem->createBox(planeTransform->getTransform()->getPosition() - glm::vec3(0, 1.f, 0), planeRb->getHalfExtents(), planeRb->getMass(), planeRb->getIsStatic());
+    planeRb->setHandle(planeHandle);
 
     Engine::Entity *gridEntity = world.createEntity();
     auto *gridTransform = gridEntity->addComponent<Engine::Components::TransformComponent>();
     gridEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Line>(grid));
 
-    auto cubeHull = Engine::Physics::ConvexHull::createBox(glm::vec3(1.f));
-    auto *cubePhysics = cubeEntity->addComponent<Engine::Components::RigidbodyComponent>(std::make_unique<Engine::Physics::Rigidbody>(glm::vec3(2, 0, 2), 1.f, cubeHull));
-
     float theta = 0.0001f, phi = M_PI / 4;
-    camera.rotate(7.f, {theta, phi});
+    camera.rotate(25.f, {theta, phi});
 
     audioManager.loadSound("footstep", "assets/audio/footstep-wood.wav");
+    audioManager.loadSound("rising", "assets/audio/rising.wav");
 
     events.subscribe<Engine::ScrollEvent>([&camera, &theta, &phi](const Engine::ScrollEvent &event)
                                           {
-                                            theta += event.getX() / 20;
+                                            theta -= event.getX() / 20;
                                             phi += event.getY() / 20;
 
                                             if (phi < 0) {
@@ -125,16 +164,16 @@ int render()
                                                 phi = glm::pi<float>() - 0.0001f;
                                             }
 
-                                            camera.rotate(7.f, {theta, phi}); });
+                                            camera.rotate(25.f, {theta, phi}); });
 
     events.subscribe<Engine::KeyEvent>([&window, &camera, &audioManager](const Engine::KeyEvent &event)
                                        {
                                         if (event.getKey() == GLFW_KEY_ESCAPE && event.getAction() == GLFW_PRESS)
                                         {
+                                            audioManager.playSound("rising");
                                             window.close();
                                         }
                                         else if(event.getKey() == GLFW_KEY_LEFT && event.getAction() != GLFW_RELEASE) {
-                                            audioManager.playSound("footstep");
                                             camera.translate(glm::vec3(-0.5f, 0, 0));
                                         }
                                         else if(event.getKey() == GLFW_KEY_RIGHT && event.getAction() != GLFW_RELEASE) {
@@ -145,6 +184,12 @@ int render()
                                         }
                                         else if(event.getKey() == GLFW_KEY_DOWN && event.getAction() != GLFW_RELEASE) {
                                             camera.translate(glm::vec3(0, 0, 0.5f));
+                                        }
+                                        else if(event.getKey() == GLFW_KEY_Q && event.getAction() != GLFW_RELEASE) {
+                                            camera.translate(glm::vec3(0,-0.5f,0));
+                                        }
+                                        else if(event.getKey() == GLFW_KEY_E && event.getAction() != GLFW_RELEASE) {
+                                            camera.translate(glm::vec3(0,0.5f,0));
                                         } });
 
     while (window.is_open())
@@ -159,11 +204,11 @@ int render()
 
         auto viewProj = camera.getViewProjection();
         renderSystem->setViewProjection(viewProj);
+
         world.update(clock.getDeltaTime());
-
         events.processEvents();
-
         audioManager.update();
+
         glfwSwapBuffers(window.get());
         glfwPollEvents();
     }

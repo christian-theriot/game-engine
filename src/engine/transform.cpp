@@ -12,8 +12,8 @@ void Engine::Transform::updateMatrix()
     glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.f), scale);
 
     rotationMatrix = glm::rotate(rotationMatrix, rotation.x, glm::vec3(1.f, 0.f, 0.f));
-    rotationMatrix = glm::rotate(rotationMatrix, rotation.x, glm::vec3(0.f, 1.f, 0.f));
-    rotationMatrix = glm::rotate(rotationMatrix, rotation.x, glm::vec3(0.f, 0.f, 1.f));
+    rotationMatrix = glm::rotate(rotationMatrix, rotation.y, glm::vec3(0.f, 1.f, 0.f));
+    rotationMatrix = glm::rotate(rotationMatrix, rotation.z, glm::vec3(0.f, 0.f, 1.f));
 
     localMatrix = translationMatrix * rotationMatrix * scaleMatrix;
     isDirty = false;
@@ -30,6 +30,11 @@ void Engine::Transform::setPosition(const glm::vec3 &pos)
 void Engine::Transform::setRotation(const glm::vec3 &rot)
 {
     rotation = rot;
+    isDirty = true;
+}
+void Engine::Transform::setRotation(const glm::quat &rot)
+{
+    rotation = glm::eulerAngles(rot);
     isDirty = true;
 }
 void Engine::Transform::setScale(const glm::vec3 &newScale)
