@@ -29,7 +29,20 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(sol2)
 
+FetchContent_Declare(
+    wasmtime
+    URL https://github.com/bytecodealliance/wasmtime/releases/download/v25.0.0/wasmtime-v25.0.0-aarch64-macos-c-api.tar.xz
+)
+FetchContent_MakeAvailable(wasmtime)
+
 add_library(scripting_deps INTERFACE)
-target_link_libraries(scripting_deps INTERFACE sol2::sol2 lua_lib)
+target_include_directories(scripting_deps INTERFACE
+    ${wasmtime_SOURCE_DIR}/include
+)
+target_link_libraries(scripting_deps INTERFACE
+    sol2::sol2
+    lua_lib
+    ${wasmtime_SOURCE_DIR}/lib/libwasmtime.a
+)
 target_compile_definitions(scripting_deps INTERFACE SOL_USE_STD_OPTIONAL=1 SOL_USE_BOOST=0)
 target_compile_features(scripting_deps INTERFACE cxx_std_17)

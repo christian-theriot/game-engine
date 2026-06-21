@@ -25,7 +25,7 @@ Engine::Systems::LuaScriptingSystem::~LuaScriptingSystem()
 void Engine::Systems::LuaScriptingSystem::init()
 {
     scriptingEngine = std::make_unique<Engine::LuaScriptingEngine>();
-    ScriptBindings::bindAll(scriptingEngine->state(), world);
+    LuaBindings().bindAll(scriptingEngine->state(), world);
 }
 void Engine::Systems::LuaScriptingSystem::update(World *world, float deltaTime)
 {
@@ -86,4 +86,56 @@ bool Engine::Systems::LuaScriptingSystem::load(Engine::Components::LuaScriptComp
     component->started = false;
 
     return true;
+}
+
+Engine::Systems::WasmScriptingSystem::WasmScriptingSystem(World *world)
+    : world(world)
+{
+}
+bool Engine::Systems::WasmScriptingSystem::load(Engine::Components::WasmScriptComponent *component, const std::string &path)
+{
+    component->scriptingEngine = std::make_unique<Engine::WasmScriptingEngine>();
+    component->scriptingEngine->setWorld(world);
+
+    if (!component->scriptingEngine->load(path))
+    {
+        std::cerr << "[Wasm] Failed to load '" << path << "'" << std::endl;
+        component->scriptingEngine.reset();
+        return false;
+    }
+
+    component->scriptPath = path;
+    component->started = false;
+
+    // TODO: add a hasExport(name) to WasmScriptingEngine and use it here instead of being optimistic and letting call catch missing functions
+    component->hasOnStart = component->scriptingEngine->hasExport("onStart");
+    component->hasOnUpdate = component->scriptingEngine->hasExport("onUpdate");
+
+    return true;
+}
+void Engine::Systems::WasmScriptingSystem::update(World *world, float deltaTime)
+{
+    auto entities = world->getEntitiesWithComponent<Engine::Components::WasmScriptComponent>();
+
+    for (auto *entity : entities)
+    {
+        auto *scriptComponent = entity->getComponent<Engine::Components::WasmScriptComponent>();
+
+        if (!scriptComponent || !scriptComponent->scriptingEngine)
+            continue;
+
+        if (!scriptComponent->started)
+        {
+            if (scriptComponent->hasOnStart)
+            {
+                scriptComponent->scriptingEngine->call("onStart");
+            }
+            scriptComponent->started = true;
+        }
+
+        if (scriptComponent->hasOnUpdate)
+        {
+            scriptComponent->scriptingEngine->call("onUpdate", deltaTime);
+        }
+    }
 }

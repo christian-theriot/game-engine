@@ -24,6 +24,19 @@ namespace Engine::Systems
 
         LuaScriptingEngine &getScriptingEngine();
     };
+
+    class WasmScriptingSystem : public System
+    {
+        World *world;
+
+    public:
+        explicit WasmScriptingSystem(World *world);
+
+        void update(World *world, float deltaTime);
+
+        // Compile + instantiate a .wasm module onto a component.
+        bool load(Engine::Components::WasmScriptComponent *component, const std::string &path);
+    };
 }
 
 #endif

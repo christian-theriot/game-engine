@@ -22,6 +22,7 @@
 #include <engine/components/transform.hpp>
 #include <engine/world.hpp>
 #include <engine/events.hpp>
+#include <engine/scripting.hpp>
 #include <engine/input.hpp>
 #include <engine/audio-manager.hpp>
 
@@ -93,12 +94,15 @@ int render()
     auto *transformSystem = world.registerSystem<Engine::Systems::TransformSystem>();
     auto *physicsSystem = world.registerSystem<Engine::Systems::PhysicsSystem>();
     auto *luaScriptingSystem = world.registerSystem<Engine::Systems::LuaScriptingSystem>(&world);
+    auto *wasmScriptingSystem = world.registerSystem<Engine::Systems::WasmScriptingSystem>(&world);
 
     Engine::Entity *sphereEntity = world.createEntity();
     auto *sphereTransform = sphereEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(2, 0, 0));
     auto *sphereMesh = sphereEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Sphere>());
     auto *sphereLua = sphereEntity->addComponent<Engine::Components::LuaScriptComponent>();
     luaScriptingSystem->load(sphereLua, "assets/lua/spinner.lua");
+    auto *sphereWasm = sphereEntity->addComponent<Engine::Components::WasmScriptComponent>();
+    wasmScriptingSystem->load(sphereWasm, "assets/wasm/spinner.wasm");
     sphereMesh->getMesh()->setTexture(*png2);
 
     float chi = 0.f;
