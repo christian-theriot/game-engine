@@ -12,6 +12,7 @@
 #include <stb/stb_image.h>
 
 Engine::Image::Image(const char *filename)
+    : filename(filename)
 {
     int width, height, channels;
     unsigned char *data = stbi_load(filename, &width, &height, &channels, 0);
@@ -42,7 +43,16 @@ Engine::Image::Image(const char *filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 }
-
+Engine::Image &Engine::Image::operator=(const Image &other)
+{
+    if (this != &other && image != 0)
+    {
+        glDeleteTextures(1, &image);
+        image = other.image;
+        filename = other.filename;
+    }
+    return *this;
+}
 GLuint Engine::Image::get() const
 {
     return image;
@@ -51,4 +61,18 @@ GLuint Engine::Image::get() const
 void Engine::Image::use() const
 {
     glBindTexture(GL_TEXTURE_2D, image);
+}
+
+const std::string &Engine::Image::getFilename() const
+{
+    return filename;
+}
+
+void Engine::to_json(nlohmann::json &j, const Image &image)
+{
+    j["file"] = image.getFilename();
+}
+void Engine::from_json(const nlohmann::json &j, Image &image)
+{
+    image = j.at("file").get<std::string>().c_str();
 }

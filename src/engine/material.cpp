@@ -18,11 +18,6 @@ Engine::Material::Material(const Engine::Material &material)
 
 Engine::Material::Material(const char *filename)
 {
-    this->operator=(filename);
-}
-
-Engine::Material &Engine::Material::operator=(const char *filename)
-{
     GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -38,7 +33,7 @@ Engine::Material &Engine::Material::operator=(const char *filename)
     else
     {
         std::cout << "Impossible to open " << filename << "/vertex.glsl" << std::endl;
-        return *this;
+        return;
     }
 
     std::string fragmentShaderCode;
@@ -101,11 +96,33 @@ Engine::Material &Engine::Material::operator=(const char *filename)
     glDeleteShader(fragmentShaderID);
 
     this->program = programID;
+}
 
+Engine::Material &Engine::Material::operator=(const Material &material)
+{
+    if (this != &material && this->program != 0)
+    {
+        glDeleteProgram(this->program);
+        program = material.program;
+        filename = material.filename;
+    }
     return *this;
 }
 
 GLuint Engine::Material::get() const
 {
     return this->program;
+}
+const std::string &Engine::Material::getFilename() const
+{
+    return filename;
+}
+
+void Engine::to_json(nlohmann::json &j, const Material &material)
+{
+    j["file"] = material.getFilename();
+}
+void Engine::from_json(const nlohmann::json &j, Material &material)
+{
+    material = Material(j.at("file").get<std::string>().c_str());
 }
