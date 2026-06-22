@@ -6,13 +6,13 @@
 #include <engine/component.hpp>
 #include <unordered_map>
 #include <string>
+#include <nlohmann/json.hpp>
 
 namespace Engine
 {
     class Entity
     {
         uint64_t id;
-        std::string uuid;
         std::unordered_map<size_t, std::shared_ptr<Component>> components;
         static uint64_t nextId;
 
@@ -20,6 +20,7 @@ namespace Engine
         Entity();
 
         uint64_t getId() const;
+        void setId(uint64_t newId);
 
         template <typename T, typename... Args>
         T *addComponent(Args &&...args)
@@ -75,6 +76,9 @@ namespace Engine
 
         const std::unordered_map<size_t, std::shared_ptr<Component>> &getComponents() const;
     };
+
+    void to_json(nlohmann::json &j, const Entity &entity);
+    void from_json(const nlohmann::json &j, Entity &entity);
 }
 
 #endif

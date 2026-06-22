@@ -2,8 +2,10 @@
  * Copyright (C) 2026 Christian Theriot
  */
 #include <engine/mesh.hpp>
+#include <engine/primitives/line.hpp>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 enum OBJ_STATE
 {
@@ -139,10 +141,41 @@ Engine::Mesh::Mesh()
 {
 }
 Engine::Mesh::Mesh(const char *filename, const Image &texture, const Material &material)
-    : texture(texture), material(material), model(1.0f)
+    : texture(texture),
+      material(material),
+      model(1.0f),
+      filename(filename)
 {
     loadObject(filename, vertices, uvs);
     initMesh(VAO, VBO, UVBO, vertices, uvs);
+}
+Engine::Mesh &Engine::Mesh::operator=(const Mesh &other)
+{
+    if (this != &other)
+    {
+        if (VAO != 0)
+        {
+            glDeleteVertexArrays(1, &VAO);
+        }
+        if (VBO != 0)
+        {
+            glDeleteBuffers(1, &VBO);
+        }
+        if (UVBO != 0)
+        {
+            glDeleteBuffers(1, &UVBO);
+        }
+
+        texture = other.texture;
+        material = other.material;
+        vertices = other.vertices;
+        uvs = other.uvs;
+        model = other.model;
+        filename = other.filename;
+
+        initMesh(VAO, VBO, UVBO, vertices, uvs);
+    }
+    return *this;
 }
 void Engine::Mesh::render(glm::mat4 mvp) const
 {
@@ -172,4 +205,60 @@ void Engine::Mesh::setMaterial(const Material &material)
 void Engine::Mesh::setTexture(const Image &texture)
 {
     this->texture = texture;
+}
+void Engine::Mesh::serialize(nlohmann::json &j) const
+{
+    j["type"] = "Mesh";
+    j["file"] = filename;
+    j["texture"] = texture;
+    j["material"] = material;
+    if (filename == "")
+    {
+        j["vertices"] = vertices;
+        j["uvs"] = uvs;
+    }
+    j["model"] = model;
+}
+void Engine::Mesh::deserialize(const nlohmann::json &j)
+{
+    if (j.contains("file"))
+    {
+        filename = j["file"];
+        loadObject(filename.c_str(), vertices, uvs);
+        initMesh(VAO, VBO, UVBO, vertices, uvs);
+    }
+    else
+    {
+        vertices = j["vertices"].get<std::vector<GLfloat>>();
+        uvs = j["uvs"].get<std::vector<GLfloat>>();
+        initMesh(VAO, VBO, UVBO, vertices, uvs);
+    }
+    texture = j["texture"].get<Image>();
+    material = j["material"].get<Material>();
+    model = j["model"].get<glm::mat4>();
+}
+
+void Engine::to_json(nlohmann::json &j, const std::unique_ptr<Mesh> &mesh)
+{
+    mesh->serialize(j);
+}
+void Engine::from_json(const nlohmann::json &j, std::unique_ptr<Mesh> &mesh)
+{
+    if (j["type"] == "Mesh")
+    {
+        mesh = std::make_unique<Mesh>();
+    }
+    else if (j["type"] == "Line")
+    {
+        auto vertices = j["vertices"].get<std::vector<GLfloat>>();
+        auto colors = j["colors"].get<std::vector<GLfloat>>();
+        auto material = j["material"].get<Material>();
+        mesh = std::make_unique<Primitives::Line>(vertices, colors, material);
+    }
+    else
+    {
+        std::cout << "Unknown mesh type: " << j["type"] << std::endl;
+        return;
+    }
+    mesh->deserialize(j);
 }

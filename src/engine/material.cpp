@@ -12,11 +12,13 @@ Engine::Material::Material()
 }
 
 Engine::Material::Material(const Engine::Material &material)
-    : program(material.program)
+    : program(material.program),
+      filename(material.filename)
 {
 }
 
 Engine::Material::Material(const char *filename)
+    : filename(filename)
 {
     GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -100,9 +102,12 @@ Engine::Material::Material(const char *filename)
 
 Engine::Material &Engine::Material::operator=(const Material &material)
 {
-    if (this != &material && this->program != 0)
+    if (this != &material)
     {
-        glDeleteProgram(this->program);
+        if (program != 0)
+        {
+            glDeleteProgram(program);
+        }
         program = material.program;
         filename = material.filename;
     }

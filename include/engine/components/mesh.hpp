@@ -5,6 +5,7 @@
  */
 #include <engine/component.hpp>
 #include <engine/mesh.hpp>
+#include <nlohmann/json.hpp>
 
 namespace Engine::Components
 {
@@ -13,10 +14,14 @@ namespace Engine::Components
         std::unique_ptr<Mesh> mesh;
 
     public:
-        MeshComponent(std::unique_ptr<Mesh> mesh);
+        MeshComponent(std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>());
         Mesh *getMesh() const;
+        const std::unique_ptr<Mesh> &getMeshPtr() const;
         void setMesh(std::unique_ptr<Mesh> mesh);
     };
+
+    void to_json(nlohmann::json &j, const MeshComponent &meshComponent);
+    void from_json(const nlohmann::json &j, MeshComponent &meshComponent);
 }
 
 #endif

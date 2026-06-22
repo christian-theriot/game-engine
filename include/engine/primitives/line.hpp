@@ -15,9 +15,11 @@ namespace Engine::Primitives
         GLuint CBO;
 
     public:
-        Line(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const Engine::Material &material = "assets/shaders/color");
+        Line(const std::vector<GLfloat> &vertices, const std::vector<GLfloat> &colors, const Engine::Material &material = "assets/shaders/color");
 
-        void render(glm::mat4 mvp) const;
+        void render(glm::mat4 mvp) const override;
+        void serialize(nlohmann::json &j) const override;
+        void deserialize(const nlohmann::json &j) override;
     };
 }
 

@@ -17,7 +17,7 @@ void initLineMesh(GLuint &VAO, GLuint &VBO, GLuint &CBO, const std::vector<GLflo
     glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(GLfloat), colors.data(), GL_STATIC_DRAW);
 }
 
-Engine::Primitives::Line::Line(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const Engine::Material &material)
+Engine::Primitives::Line::Line(const std::vector<GLfloat> &vertices, const std::vector<GLfloat> &colors, const Engine::Material &material)
     : Engine::Mesh(),
       colors(colors)
 {
@@ -44,4 +44,17 @@ void Engine::Primitives::Line::render(glm::mat4 mvp) const
     glDrawArrays(GL_LINES, 0, vertices.size() / 3);
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+}
+
+void Engine::Primitives::Line::serialize(nlohmann::json &j) const
+{
+    Mesh::serialize(j);
+    j["type"] = "Line";
+    j["colors"] = colors;
+}
+void Engine::Primitives::Line::deserialize(const nlohmann::json &j)
+{
+    colors = j["colors"].get<std::vector<GLfloat>>();
+
+    initLineMesh(VAO, VBO, CBO, vertices, colors);
 }

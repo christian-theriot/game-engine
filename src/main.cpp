@@ -152,7 +152,7 @@ int render()
 
     Engine::Entity *gridEntity = world.createEntity();
     auto *gridTransform = gridEntity->addComponent<Engine::Components::TransformComponent>();
-    gridEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Line>(grid));
+    auto *gridMesh = gridEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Sphere>());
 
     float theta = 0.0001f, phi = M_PI / 4;
     camera.rotate(25.f, {theta, phi});
@@ -174,7 +174,7 @@ int render()
 
                                             camera.rotate(25.f, {theta, phi}); });
 
-    events.subscribe<Engine::KeyEvent>([&window, &camera, &audioManager, sphereTransform](const Engine::KeyEvent &event)
+    events.subscribe<Engine::KeyEvent>([&window, &camera, &audioManager, gridEntity](const Engine::KeyEvent &event)
                                        {
                                         if (event.getKey() == GLFW_KEY_ESCAPE && event.getAction() == GLFW_PRESS)
                                         {
@@ -183,12 +183,17 @@ int render()
                                         }
                                         else if(event.getKey() == GLFW_KEY_LEFT && event.getAction() != GLFW_RELEASE) {
                                             camera.translate(glm::vec3(-0.5f, 0, 0));
-                                            std::ifstream file("sphere.json");
-                                            nlohmann::json j = nlohmann::json::parse(file);
-                                            *sphereTransform = j.at("sphere").get<Engine::Components::TransformComponent>();
+                                            std::ofstream file("grid.json");
+                                            nlohmann::json j;
+                                            j["grid"] = *gridEntity;
+                                            file << j.dump(4);
                                         }
                                         else if(event.getKey() == GLFW_KEY_RIGHT && event.getAction() != GLFW_RELEASE) {
                                             camera.translate(glm::vec3(0.5f, 0, 0));
+
+                                            std::ifstream file("grid.json");
+                                            nlohmann::json j = nlohmann::json::parse(file);
+                                            *gridEntity = j.at("grid").get<Engine::Entity>();
                                         }
                                         else if(event.getKey() == GLFW_KEY_UP && event.getAction() != GLFW_RELEASE) {
                                             camera.translate(glm::vec3(0, 0, -0.5f));

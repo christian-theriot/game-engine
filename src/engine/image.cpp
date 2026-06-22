@@ -45,9 +45,12 @@ Engine::Image::Image(const char *filename)
 }
 Engine::Image &Engine::Image::operator=(const Image &other)
 {
-    if (this != &other && image != 0)
+    if (this != &other)
     {
-        glDeleteTextures(1, &image);
+        if (image != 0)
+        {
+            glDeleteTextures(1, &image);
+        }
         image = other.image;
         filename = other.filename;
     }
