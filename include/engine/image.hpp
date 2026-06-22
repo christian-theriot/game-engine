@@ -14,6 +14,7 @@ namespace Engine
         GLuint image;
 
     public:
+        Image() = default;
         Image(const char *filename);
 
         GLuint get() const;

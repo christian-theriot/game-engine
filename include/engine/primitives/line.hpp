@@ -11,7 +11,6 @@ namespace Engine::Primitives
 {
     class Line : public Mesh
     {
-        Material material;
         std::vector<GLfloat> colors;
         GLuint CBO;
 

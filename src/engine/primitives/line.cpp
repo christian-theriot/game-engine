@@ -18,10 +18,10 @@ void initLineMesh(GLuint &VAO, GLuint &VBO, GLuint &CBO, const std::vector<GLflo
 }
 
 Engine::Primitives::Line::Line(const std::initializer_list<GLfloat> vertices, const std::initializer_list<GLfloat> colors, const Engine::Material &material)
-    : Engine::Mesh(nullptr, "assets/textures/checkerboard.png", material),
-      material(material),
+    : Engine::Mesh(),
       colors(colors)
 {
+    this->setMaterial(material);
     this->vertices = vertices;
     initLineMesh(VAO, VBO, CBO, vertices, colors);
 }

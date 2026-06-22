@@ -18,6 +18,9 @@ namespace Engine::Components
         Transform *getTransform() const;
         void setTransform(std::unique_ptr<Transform> transform);
     };
+
+    void to_json(nlohmann::json &j, const TransformComponent &tc);
+    void from_json(const nlohmann::json &j, TransformComponent &tc);
 }
 
 #endif

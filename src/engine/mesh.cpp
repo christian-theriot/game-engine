@@ -134,7 +134,10 @@ void initMesh(GLuint &VAO, GLuint &VBO, GLuint &UVBO, const std::vector<GLfloat>
     glBindBuffer(GL_ARRAY_BUFFER, UVBO);
     glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(GL_FLOAT), uvs.data(), GL_STATIC_DRAW);
 }
-
+Engine::Mesh::Mesh()
+    : model(1.0f)
+{
+}
 Engine::Mesh::Mesh(const char *filename, const Image &texture, const Material &material)
     : texture(texture), material(material), model(1.0f)
 {
@@ -161,6 +164,10 @@ void Engine::Mesh::render(glm::mat4 mvp) const
 
     glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 3);
     glDisableVertexAttribArray(0);
+}
+void Engine::Mesh::setMaterial(const Material &material)
+{
+    this->material = material;
 }
 void Engine::Mesh::setTexture(const Image &texture)
 {

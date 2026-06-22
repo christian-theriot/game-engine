@@ -41,7 +41,7 @@ export function onUpdate(deltaTime: f32): void {
     const entity = getEntityById(1);
 
     if (entity == 1) {
-        setEntityPosition(entity, f32(Math.cos(angle * (Math.PI / 180))), 0, f32(Math.sin(angle * (Math.PI / 180))));
+        // setEntityPosition(entity, f32(Math.cos(angle * (Math.PI / 180))), 0, f32(Math.sin(angle * (Math.PI / 180))));
         setEntityRotation(entity, 0, f32(angle * (Math.PI / 180)), 0);
         setEntityScale(entity, scaleX, 1.0, 1.0);
     }

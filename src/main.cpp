@@ -28,6 +28,7 @@
 #include <engine/scripting.hpp>
 #include <engine/input.hpp>
 #include <engine/audio-manager.hpp>
+#include <fstream>
 
 int render();
 
@@ -173,7 +174,7 @@ int render()
 
                                             camera.rotate(25.f, {theta, phi}); });
 
-    events.subscribe<Engine::KeyEvent>([&window, &camera, &audioManager](const Engine::KeyEvent &event)
+    events.subscribe<Engine::KeyEvent>([&window, &camera, &audioManager, sphereTransform](const Engine::KeyEvent &event)
                                        {
                                         if (event.getKey() == GLFW_KEY_ESCAPE && event.getAction() == GLFW_PRESS)
                                         {
@@ -182,6 +183,9 @@ int render()
                                         }
                                         else if(event.getKey() == GLFW_KEY_LEFT && event.getAction() != GLFW_RELEASE) {
                                             camera.translate(glm::vec3(-0.5f, 0, 0));
+                                            std::ifstream file("sphere.json");
+                                            nlohmann::json j = nlohmann::json::parse(file);
+                                            *sphereTransform = j.at("sphere").get<Engine::Components::TransformComponent>();
                                         }
                                         else if(event.getKey() == GLFW_KEY_RIGHT && event.getAction() != GLFW_RELEASE) {
                                             camera.translate(glm::vec3(0.5f, 0, 0));

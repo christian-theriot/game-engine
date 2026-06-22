@@ -5,6 +5,24 @@
  */
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <nlohmann/json.hpp>
+
+namespace glm
+{
+    inline void to_json(nlohmann::json &j, const glm::vec3 &v)
+    {
+        j = nlohmann::json{v.x, v.y, v.z};
+    }
+    inline void from_json(const nlohmann::json &j, glm::vec3 &v)
+    {
+        if (j.is_array() && j.size() == 3)
+        {
+            j.at(0).get_to(v.x);
+            j.at(1).get_to(v.y);
+            j.at(2).get_to(v.z);
+        }
+    }
+}
 
 namespace Engine
 {
@@ -40,6 +58,9 @@ namespace Engine
         glm::mat4 getLocalMatrix() const;
         glm::mat4 getWorldMatrix() const;
     };
+
+    void to_json(nlohmann::json &j, const Transform &t);
+    void from_json(const nlohmann::json &j, Transform &t);
 }
 
 #endif

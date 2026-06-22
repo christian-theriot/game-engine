@@ -76,3 +76,16 @@ glm::mat4 Engine::Transform::getWorldMatrix() const
 {
     return worldMatrix;
 }
+
+void Engine::to_json(nlohmann::json &j, const Transform &t)
+{
+    j["position"] = t.getPosition();
+    j["rotation"] = t.getRotation();
+    j["scale"] = t.getScale();
+}
+void Engine::from_json(const nlohmann::json &j, Transform &t)
+{
+    t.setPosition(j.at("position").get<glm::vec3>());
+    t.setRotation(j.at("rotation").get<glm::vec3>());
+    t.setScale(j.at("scale").get<glm::vec3>());
+}

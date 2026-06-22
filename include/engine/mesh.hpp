@@ -23,11 +23,13 @@ namespace Engine
         GLuint VAO, VBO, UVBO;
 
     public:
+        Mesh();
         Mesh(const char *filename, const Image &texture = "assets/textures/checkerboard.png", const Material &material = "assets/shaders/texture");
         virtual ~Mesh() = default;
 
         void render(glm::mat4 mvp) const;
 
+        void setMaterial(const Material &material);
         void setTexture(const Image &texture);
     };
 }

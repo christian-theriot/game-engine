@@ -39,6 +39,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(wasmtime)
 
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
 add_library(scripting_deps INTERFACE)
 target_include_directories(scripting_deps INTERFACE
     ${wasmtime_SOURCE_DIR}/include

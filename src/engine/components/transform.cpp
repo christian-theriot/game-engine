@@ -18,3 +18,15 @@ void Engine::Components::TransformComponent::setTransform(std::unique_ptr<Transf
 {
     transform = std::move(t);
 }
+
+void Engine::Components::to_json(nlohmann::json &j, const TransformComponent &tc)
+{
+    j["transform"] = *tc.getTransform();
+}
+void Engine::Components::from_json(const nlohmann::json &j, TransformComponent &tc)
+{
+    if (j.contains("transform"))
+    {
+        tc.setTransform(std::make_unique<Transform>(j.at("transform").get<Transform>()));
+    }
+}

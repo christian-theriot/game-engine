@@ -38,6 +38,7 @@ target_link_libraries(engine
     glad
     Jolt
     scripting_deps
+    nlohmann_json::nlohmann_json
     -L/Users/ctheriot/homebrew/Cellar/glfw/3.4/lib -lglfw
     -L/Users/ctheriot/homebrew/Cellar/glm/1.0.3/lib -lglm
     -L/Users/ctheriot/homebrew/Cellar/openal-soft/1.25.2/lib -lopenal
