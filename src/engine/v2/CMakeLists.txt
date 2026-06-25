@@ -1,9 +1,12 @@
 add_library(engine
     clock.cpp
     events.cpp
+    render/render-mesh.cpp
     resources/mesh.cpp
+    resources/script.cpp
     resources/shader.cpp
     resources/texture.cpp
+    resources/transform.cpp
     version.cpp
     window.cpp
 )
@@ -17,6 +20,7 @@ target_compile_features(engine PUBLIC cxx_std_17)
 target_link_libraries(engine
     glad
     Jolt
+    assimp
     scripting_deps
     nlohmann_json::nlohmann_json
     -L/Users/ctheriot/homebrew/Cellar/glfw/3.4/lib -lglfw

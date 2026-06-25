@@ -14,6 +14,10 @@ void Engine::Resources::to_json(nlohmann::json &j, const Mesh &mesh)
     {
         j["colors"] = mesh.colors;
     }
+    if (!mesh.indices.empty())
+    {
+        j["indices"] = mesh.indices;
+    }
 }
 void Engine::Resources::from_json(const nlohmann::json &j, Mesh &mesh)
 {
@@ -30,5 +34,10 @@ void Engine::Resources::from_json(const nlohmann::json &j, Mesh &mesh)
     if (j.contains("colors"))
     {
         mesh.colors = j.at("colors").get<std::vector<GLfloat>>();
+    }
+
+    if (j.contains("indices"))
+    {
+        mesh.indices = j.at("indices").get<std::vector<GLuint>>();
     }
 }

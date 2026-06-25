@@ -1,6 +1,8 @@
 add_subdirectory(glad)
 
 include(FetchContent)
+
+# Import JoltPhysics
 FetchContent_Declare(
     JoltPhysics
     GIT_REPOSITORY https://github.com/jrouwe/JoltPhysics.git
@@ -10,6 +12,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(JoltPhysics)
 
+# Import Lua
 FetchContent_Declare(
     lua
     GIT_REPOSITORY https://github.com/lua/lua.git
@@ -24,6 +27,7 @@ list(FILTER LUA_SOURCES EXCLUDE REGEX ".*/(lua|luac)\\.c$")
 add_library(lua_lib STATIC ${LUA_SOURCES})
 target_include_directories(lua_lib PUBLIC ${lua_SOURCE_DIR})
 
+# Import sol2
 FetchContent_Declare(
     sol2
     GIT_REPOSITORY https://github.com/ThePhD/sol2.git
@@ -32,6 +36,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(sol2)
 
+# Import WasmTime
 FetchContent_Declare(
     wasmtime
     URL https://github.com/bytecodealliance/wasmtime/releases/download/v25.0.0/wasmtime-v25.0.0-aarch64-macos-c-api.tar.xz
@@ -39,6 +44,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(wasmtime)
 
+# Import nlohmann_json
 FetchContent_Declare(
     nlohmann_json
     GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -46,6 +52,18 @@ FetchContent_Declare(
     DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(nlohmann_json)
+
+# Import Assimp
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG v5.4.3
+)
+FetchContent_MakeAvailable(assimp)
 
 add_library(scripting_deps INTERFACE)
 target_include_directories(scripting_deps INTERFACE

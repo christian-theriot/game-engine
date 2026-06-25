@@ -1,5 +1,5 @@
-#ifndef __ENGINE_V2_SCENE_COMPONENTS_MESH_HPP
-#define __ENGINE_V2_SCENE_COMPONENTS_MESH_HPP
+#ifndef __ENGINE_V2_RESOURCES_MESH_HPP
+#define __ENGINE_V2_RESOURCES_MESH_HPP
 /**
  * Copyright (C) 2026 Christian Theriot
  */
@@ -16,6 +16,7 @@ namespace Engine::Resources
         std::vector<GLfloat> vertices;
         std::vector<GLfloat> uvs;
         std::vector<GLfloat> colors;
+        std::vector<GLuint> indices;
     };
 
     void to_json(nlohmann::json &j, const Mesh &mesh);

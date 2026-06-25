@@ -104,9 +104,9 @@ int render()
     auto *sphereTransform = sphereEntity->addComponent<Engine::Components::TransformComponent>(glm::vec3(2, 0, 0));
     auto *sphereMesh = sphereEntity->addComponent<Engine::Components::MeshComponent>(std::make_unique<Engine::Primitives::Sphere>());
     auto *sphereLua = sphereEntity->addComponent<Engine::Components::LuaScriptComponent>();
-    luaScriptingSystem->load(sphereLua, "assets/lua/spinner.lua");
+    luaScriptingSystem->load(sphereLua, "assets/scripts/lua/spinner.lua");
     auto *sphereWasm = sphereEntity->addComponent<Engine::Components::WasmScriptComponent>();
-    wasmScriptingSystem->load(sphereWasm, "assets/wasm/spinner.wasm");
+    wasmScriptingSystem->load(sphereWasm, "assets/scripts/wasm/spinner.wasm");
     sphereMesh->getMesh()->setTexture(*png2);
 
     float chi = 0.f;
