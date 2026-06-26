@@ -14,6 +14,8 @@ namespace Engine::Scene
     public:
         virtual ~Component() = default;
         virtual std::string type() const = 0;
+        virtual void onAttach() {}
+        virtual void onDetach() {}
     };
 }
 

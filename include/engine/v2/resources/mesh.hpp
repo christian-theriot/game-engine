@@ -7,6 +7,7 @@
 #include <engine/v2/serialization/serializable.hpp>
 #include <glad/glad.h>
 #include <vector>
+#include <string>
 #include <nlohmann/json.hpp>
 
 namespace Engine::Resources
@@ -17,6 +18,8 @@ namespace Engine::Resources
         std::vector<GLfloat> uvs;
         std::vector<GLfloat> colors;
         std::vector<GLuint> indices;
+
+        std::string path;
     };
 
     void to_json(nlohmann::json &j, const Mesh &mesh);

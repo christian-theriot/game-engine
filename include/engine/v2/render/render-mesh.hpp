@@ -29,7 +29,10 @@ namespace Engine::Render
 
     public:
         // Create mesh from a file path, or create a cube by default if no path is provided
-        static Core::Result<RenderMesh> load(Resources::Mesh &mesh, const std::string &path = "");
+        // @arg: mesh - the mesh data to load (if already populated and path is empty, will use the provided mesh data)
+        // @arg: path - the path to the mesh file to load (if empty, will use the provided mesh data)
+        // @return: Result<RenderMesh> - the result of the mesh loading operation, containing either a RenderMesh or an error
+        static Core::Result<RenderMesh> load(Resources::Mesh &mesh);
 
         inline void setProjection(const glm::mat4 &projection) { this->projection = projection; }
         inline void setView(const glm::mat4 &view)

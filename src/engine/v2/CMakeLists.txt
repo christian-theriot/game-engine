@@ -7,6 +7,9 @@ add_library(engine
     resources/shader.cpp
     resources/texture.cpp
     resources/transform.cpp
+    scene/components/mesh.cpp
+    scene/components/transform.cpp
+    scene/entity.cpp
     version.cpp
     window.cpp
 )

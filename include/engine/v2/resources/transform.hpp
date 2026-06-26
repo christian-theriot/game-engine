@@ -44,6 +44,9 @@ namespace Engine::Resources
         glm::quat rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
         glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f);
         glm::mat4 model = glm::mat4(1.f);
+
+        void update();
+        glm::mat4 updated() const;
     };
 
     void to_json(nlohmann::json &j, const Transform &transform);

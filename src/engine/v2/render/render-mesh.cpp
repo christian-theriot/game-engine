@@ -6,12 +6,12 @@
 #include <sstream>
 #include <iostream>
 
-Engine::Core::Result<Engine::Render::RenderMesh> Engine::Render::RenderMesh::load(Resources::Mesh &mesh, const std::string &path)
+Engine::Core::Result<Engine::Render::RenderMesh> Engine::Render::RenderMesh::load(Resources::Mesh &mesh)
 {
-    if (!path.empty())
+    if (!mesh.path.empty())
     {
         Assimp::Importer importer;
-        const aiScene *scene = importer.ReadFile("assets/meshes/" + path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
+        const aiScene *scene = importer.ReadFile("assets/meshes/" + mesh.path, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_FlipUVs);
 
         if (!scene || !scene->HasMeshes())
         {
@@ -118,7 +118,7 @@ void Engine::Render::RenderMesh::render(const Resources::Transform &transform, c
             return;
         }
 
-        glm::mat4 mvp = projection * view * transform.model;
+        glm::mat4 mvp = projection * view * transform.updated();
         glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
     }
     else
