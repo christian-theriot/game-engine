@@ -15,11 +15,15 @@ namespace Engine::Scene
 {
     class Entity
     {
+        uint64_t id;
         std::unordered_map<size_t, std::unique_ptr<Component>> components;
         Core::Result<Render::RenderMesh> renderMesh = Core::Fail<Render::RenderMesh>("RenderMesh not loaded");
 
     public:
         inline Entity() = default;
+
+        inline uint64_t getId() const { return id; }
+        inline void setId(uint64_t newId) { id = newId; }
 
         template <typename T, typename... Args>
         inline T *addComponent(Args &&...args)

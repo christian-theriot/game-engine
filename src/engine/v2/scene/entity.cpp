@@ -1,6 +1,7 @@
 #include <engine/v2/scene/entity.hpp>
 #include <engine/v2/scene/components/mesh.hpp>
 #include <engine/v2/scene/components/transform.hpp>
+#include <engine/v2/scene/components/rigidbody.hpp>
 
 void Engine::Scene::to_json(nlohmann::json &j, const Entity &entity)
 {
@@ -17,6 +18,10 @@ void Engine::Scene::to_json(nlohmann::json &j, const Entity &entity)
             else if (component.second->type() == "Mesh")
             {
                 j["components"].push_back(*dynamic_cast<Components::Mesh *>(component.second.get()));
+            }
+            else if (component.second->type() == "Rigidbody")
+            {
+                j["components"].push_back(*dynamic_cast<Components::Rigidbody *>(component.second.get()));
             }
         }
     }
@@ -35,6 +40,10 @@ void Engine::Scene::from_json(const nlohmann::json &j, Entity &entity)
             else if (type == "Mesh")
             {
                 entity.addComponent<Components::Mesh>(component.get<Components::Mesh>());
+            }
+            else if (type == "Rigidbody")
+            {
+                entity.addComponent<Components::Rigidbody>(component.get<Components::Rigidbody>());
             }
         }
     }

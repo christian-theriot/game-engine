@@ -8,8 +8,11 @@ add_library(engine
     resources/texture.cpp
     resources/transform.cpp
     scene/components/mesh.cpp
+    scene/components/rigidbody.cpp
     scene/components/transform.cpp
+    scene/systems/physics.cpp
     scene/entity.cpp
+    scene/world.cpp
     version.cpp
     window.cpp
 )
