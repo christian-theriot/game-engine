@@ -10,6 +10,7 @@ add_library(engine
     scene/components/mesh.cpp
     scene/components/rigidbody.cpp
     scene/components/transform.cpp
+    scene/systems/input.cpp
     scene/systems/physics.cpp
     scene/entity.cpp
     scene/world.cpp

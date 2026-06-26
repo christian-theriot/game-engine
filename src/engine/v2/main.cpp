@@ -15,7 +15,7 @@
 #include <engine/v2/scene/entity.hpp>
 #include <engine/v2/scene/systems/physics.hpp>
 #include <engine/v2/scene/world.hpp>
-
+#include <engine/v2/scene/systems/input.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
@@ -27,6 +27,7 @@ int main(int argc, char **argv)
     Engine::Window window;
     Engine::Clock clock;
     Engine::EventBus events;
+    Engine::Scene::Systems::InputSystem input(&window, &events);
 
     std::cout << "Game Engine v" << version.get() << std::endl;
 
@@ -80,6 +81,25 @@ int main(int argc, char **argv)
     planeEntity->getRenderMesh().value().setProjection(projection);
     cubeEntity->getRenderMesh().value().setView(view);
     planeEntity->getRenderMesh().value().setView(view);
+
+    events.subscribe<Engine::KeyEvent>([&](const Engine::KeyEvent &event)
+                                       {
+        if (event.getKey() == GLFW_KEY_LEFT && event.getAction() == GLFW_PRESS)
+        {
+            std::cout << "left" << std::endl;
+        }
+        else if (event.getKey() == GLFW_KEY_RIGHT && event.getAction() == GLFW_PRESS)
+        {
+            std::cout << "right" << std::endl;
+        }
+        else if (event.getKey() == GLFW_KEY_UP && event.getAction() == GLFW_PRESS)
+        {
+            std::cout << "up" << std::endl;
+        }
+        else if (event.getKey() == GLFW_KEY_DOWN && event.getAction() == GLFW_PRESS)
+        {
+            std::cout << "down" << std::endl;
+        } });
 
     while (window.is_open())
     {
