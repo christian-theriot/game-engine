@@ -1,13 +1,15 @@
-#ifndef __ENGINE_V2_WINDOW_HPP
-#define __ENGINE_V2_WINDOW_HPP
+#ifndef __ENGINE_V2_SCENE_SYSTEMS_WINDOW_HPP
+#define __ENGINE_V2_SCENE_SYSTEMS_WINDOW_HPP
 /**
  * Copyright (C) 2026 Christian Theriot
  */
+
+#include <engine/v2/scene/system.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <memory>
 
-namespace Engine
+namespace Engine::Scene::Systems
 {
     template <typename WindowHandle>
     class IWindowImpl
@@ -31,7 +33,7 @@ namespace Engine
         bool loadGlad() override;
     };
 
-    class Window
+    class Window : public Scene::System
     {
         std::unique_ptr<IWindowImpl<GLFWwindow *>> impl;
         GLFWwindow *window;
@@ -45,6 +47,7 @@ namespace Engine
         void close() const;
         void glDeclarations() const;
         void refresh() const;
+        void update(Scene::World *world, float deltaTime) override { refresh(); };
 
         bool isInitialized() const;
     };

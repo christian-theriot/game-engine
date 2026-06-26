@@ -4,15 +4,14 @@
  * Copyright (C) 2026 Christian Theriot
  */
 
-#include <engine/v2/events.hpp>
+#include <engine/v2/scene/systems/events.hpp>
 #include <engine/v2/scene/system.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Engine
 {
-    class Window;
-    class KeyEvent : public Event
+    class KeyEvent : public Scene::Systems::Event
     {
         int key;
         int scancode;
@@ -28,7 +27,7 @@ namespace Engine
         inline int getMods() const { return mods; }
     };
 
-    class CharacterEvent : public Event
+    class CharacterEvent : public Scene::Systems::Event
     {
         unsigned int codepoint;
 
@@ -37,7 +36,7 @@ namespace Engine
         inline unsigned int getCodepoint() const { return codepoint; }
     };
 
-    class CursorEvent : public Event
+    class CursorEvent : public Scene::Systems::Event
     {
         double xpos;
         double ypos;
@@ -48,7 +47,7 @@ namespace Engine
         inline double getY() const { return ypos; }
     };
 
-    class CursorEnterEvent : public Event
+    class CursorEnterEvent : public Scene::Systems::Event
     {
         bool entered;
 
@@ -57,7 +56,7 @@ namespace Engine
         inline bool get() const { return entered; }
     };
 
-    class MouseButtonEvent : public Event
+    class MouseButtonEvent : public Scene::Systems::Event
     {
         int button;
         int action;
@@ -71,7 +70,7 @@ namespace Engine
         inline int getMods() const { return mods; }
     };
 
-    class ScrollEvent : public Event
+    class ScrollEvent : public Scene::Systems::Event
     {
         double xoffset;
         double yoffset;
@@ -82,7 +81,7 @@ namespace Engine
         inline double getYOffset() const { return yoffset; }
     };
 
-    class JoystickEvent : public Event
+    class JoystickEvent : public Scene::Systems::Event
     {
         int jid;
         int event;
@@ -93,7 +92,7 @@ namespace Engine
         inline int getEvent() const { return event; }
     };
 
-    class DropEvent : public Event
+    class DropEvent : public Scene::Systems::Event
     {
         std::vector<std::string> paths;
 
@@ -110,6 +109,8 @@ namespace Engine
 
 namespace Engine::Scene::Systems
 {
+    class Window;
+
     class InputSystem : public Scene::System
     {
         static EventBus *events;

@@ -1,22 +1,22 @@
 /**
  * Copyright (C) 2026 Christian Theriot
  */
-#include <engine/v2/clock.hpp>
+#include <engine/v2/scene/systems/clock.hpp>
 
-Engine::Clock::Clock()
+Engine::Scene::Systems::Clock::Clock()
     : deltaTime(0.f), totalElapsedTime(0.f), paused(false), timeScale(1.f)
 {
     start();
 }
 
-void Engine::Clock::start()
+void Engine::Scene::Systems::Clock::start()
 {
     startTime = std::chrono::high_resolution_clock::now();
     lastFrameTime = startTime;
     totalElapsedTime = 0.f;
     deltaTime = 0.f;
 }
-void Engine::Clock::tick()
+void Engine::Scene::Systems::Clock::tick()
 {
     if (paused)
     {
@@ -36,37 +36,37 @@ void Engine::Clock::tick()
     float newFps = (-0.00001f <= deltaTime && deltaTime <= 0.00001f) ? 0.f : (1.f / std::fabs(deltaTime));
     fps = (fps + newFps) / 2;
 }
-void Engine::Clock::pause()
+void Engine::Scene::Systems::Clock::pause()
 {
     paused = true;
     deltaTime = 0.f;
 }
-void Engine::Clock::resume()
+void Engine::Scene::Systems::Clock::resume()
 {
     paused = false;
     lastFrameTime = std::chrono::high_resolution_clock::now();
 }
-void Engine::Clock::reset()
+void Engine::Scene::Systems::Clock::reset()
 {
     start();
 }
-float Engine::Clock::getDeltaTime() const
+float Engine::Scene::Systems::Clock::getDeltaTime() const
 {
     return deltaTime;
 }
-float Engine::Clock::getElapsedTime() const
+float Engine::Scene::Systems::Clock::getElapsedTime() const
 {
     return totalElapsedTime;
 }
-float Engine::Clock::getFPS() const
+float Engine::Scene::Systems::Clock::getFPS() const
 {
     return fps;
 }
-float Engine::Clock::getTimeScale() const
+float Engine::Scene::Systems::Clock::getTimeScale() const
 {
     return timeScale;
 }
-void Engine::Clock::setTimeScale(float timeScale)
+void Engine::Scene::Systems::Clock::setTimeScale(float timeScale)
 {
     if (-0.00001f <= timeScale && timeScale <= 0.00001f)
     {
@@ -75,11 +75,11 @@ void Engine::Clock::setTimeScale(float timeScale)
 
     this->timeScale = timeScale;
 }
-bool Engine::Clock::isPaused() const
+bool Engine::Scene::Systems::Clock::isPaused() const
 {
     return paused;
 }
-void Engine::Clock::setMaxDeltaTime(float max)
+void Engine::Scene::Systems::Clock::setMaxDeltaTime(float max)
 {
     deltaTime = std::min(deltaTime, max);
 }

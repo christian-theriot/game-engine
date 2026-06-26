@@ -1,19 +1,19 @@
 /**
  * Copyright (C) 2026 Christian Theriot
  */
-#include <engine/v2/window.hpp>
+#include <engine/v2/scene/systems/window.hpp>
 #include <iostream>
 
 // LCOV_EXCL_START
-bool Engine::GLFWWindowImpl::init()
+bool Engine::Scene::Systems::GLFWWindowImpl::init()
 {
     return glfwInit();
 }
-void Engine::GLFWWindowImpl::terminate()
+void Engine::Scene::Systems::GLFWWindowImpl::terminate()
 {
     glfwTerminate();
 }
-GLFWwindow *Engine::GLFWWindowImpl::createWindow(int width, int height, const char *title)
+GLFWwindow *Engine::Scene::Systems::GLFWWindowImpl::createWindow(int width, int height, const char *title)
 {
     glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -22,17 +22,17 @@ GLFWwindow *Engine::GLFWWindowImpl::createWindow(int width, int height, const ch
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     return glfwCreateWindow(width, height, title, nullptr, nullptr);
 }
-void Engine::GLFWWindowImpl::makeContextCurrent(GLFWwindow *window)
+void Engine::Scene::Systems::GLFWWindowImpl::makeContextCurrent(GLFWwindow *window)
 {
     glfwMakeContextCurrent(window);
 }
-bool Engine::GLFWWindowImpl::loadGlad()
+bool Engine::Scene::Systems::GLFWWindowImpl::loadGlad()
 {
     return gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 }
 // LCOV_EXCL_STOP
 
-Engine::Window::Window(std::unique_ptr<IWindowImpl<GLFWwindow *>> impl)
+Engine::Scene::Systems::Window::Window(std::unique_ptr<IWindowImpl<GLFWwindow *>> impl)
     : impl(std::move(impl)),
       window(nullptr)
 {
@@ -57,7 +57,7 @@ Engine::Window::Window(std::unique_ptr<IWindowImpl<GLFWwindow *>> impl)
         return;
     }
 }
-Engine::Window::~Window()
+Engine::Scene::Systems::Window::~Window()
 {
     if (impl)
     {
@@ -65,23 +65,23 @@ Engine::Window::~Window()
     }
 }
 
-GLFWwindow *Engine::Window::get() const
+GLFWwindow *Engine::Scene::Systems::Window::get() const
 {
     return this->window;
 }
-bool Engine::Window::is_open() const
+bool Engine::Scene::Systems::Window::is_open() const
 {
     return !glfwWindowShouldClose(this->window);
 }
-void Engine::Window::close() const
+void Engine::Scene::Systems::Window::close() const
 {
     glfwSetWindowShouldClose(this->window, true);
 }
-bool Engine::Window::isInitialized() const
+bool Engine::Scene::Systems::Window::isInitialized() const
 {
     return this->window != nullptr;
 }
-void Engine::Window::glDeclarations() const
+void Engine::Scene::Systems::Window::glDeclarations() const
 {
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
@@ -89,7 +89,7 @@ void Engine::Window::glDeclarations() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
-void Engine::Window::refresh() const
+void Engine::Scene::Systems::Window::refresh() const
 {
     glfwSwapBuffers(this->window);
     glfwPollEvents();

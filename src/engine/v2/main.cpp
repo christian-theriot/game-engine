@@ -3,9 +3,9 @@
  */
 
 #include <engine/v2/version.hpp>
-#include <engine/v2/window.hpp>
-#include <engine/v2/events.hpp>
-#include <engine/v2/clock.hpp>
+#include <engine/v2/scene/systems/window.hpp>
+#include <engine/v2/scene/systems/events.hpp>
+#include <engine/v2/scene/systems/clock.hpp>
 #include <engine/v2/resources/shader.hpp>
 #include <engine/v2/resources/texture.hpp>
 #include <engine/v2/render/render-mesh.hpp>
@@ -24,18 +24,7 @@
 int main(int argc, char **argv)
 {
     Engine::Version version(0, 2, 3);
-    Engine::Window window;
-    Engine::Clock clock;
-    Engine::EventBus events;
-    Engine::Scene::Systems::InputSystem input(&window, &events);
-
     std::cout << "Game Engine v" << version.get() << std::endl;
-
-    auto projection = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
-    auto view = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-
-    auto shader = Engine::Resources::Shader::load("texture");
-    auto texture = Engine::Resources::Texture::load("checkerboard-even.png");
 
     // std::ifstream inFile("entity.json");
     // nlohmann::json inJson;
@@ -74,6 +63,12 @@ int main(int argc, char **argv)
     file >> inJson;
     world = inJson.get<Engine::Scene::World>();
 
+    auto projection = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
+    auto view = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+    auto shader = Engine::Resources::Shader::load("texture");
+    auto texture = Engine::Resources::Texture::load("checkerboard-even.png");
+
     auto cubeEntity = world.getEntityById(1);
     auto planeEntity = world.getEntityById(2);
 
@@ -82,8 +77,11 @@ int main(int argc, char **argv)
     cubeEntity->getRenderMesh().value().setView(view);
     planeEntity->getRenderMesh().value().setView(view);
 
-    events.subscribe<Engine::KeyEvent>([&](const Engine::KeyEvent &event)
-                                       {
+    auto events = world.getSystem<Engine::Scene::Systems::EventBus>();
+    auto window = world.getSystem<Engine::Scene::Systems::Window>();
+
+    events->subscribe<Engine::KeyEvent>([&](const Engine::KeyEvent &event)
+                                        {
         if (event.getKey() == GLFW_KEY_LEFT && event.getAction() == GLFW_PRESS)
         {
             std::cout << "left" << std::endl;
@@ -101,23 +99,20 @@ int main(int argc, char **argv)
             std::cout << "down" << std::endl;
         } });
 
-    while (window.is_open())
+    while (window->is_open())
     {
-        window.glDeclarations();
-        clock.tick();
+        window->glDeclarations();
 
-        if (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        if (glfwGetKey(window->get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
         {
-            window.close();
+            window->close();
         }
 
         cubeEntity->getRenderMesh().value().render(cubeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
         // cubeEntity.getRenderMesh().value().render(cubeEntity.getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
         planeEntity->getRenderMesh().value().render(planeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
 
-        world.update(clock.getDeltaTime());
-        events.processEvents();
-        window.refresh();
+        world.update();
     }
 
     return 0;

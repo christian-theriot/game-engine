@@ -1,7 +1,7 @@
 #include <engine/v2/scene/systems/input.hpp>
-#include <engine/v2/window.hpp>
+#include <engine/v2/scene/systems/window.hpp>
 
-Engine::EventBus *Engine::Scene::Systems::InputSystem::events = nullptr;
+Engine::Scene::Systems::EventBus *Engine::Scene::Systems::InputSystem::events = nullptr;
 
 Engine::Scene::Systems::InputSystem::InputSystem(const Window *window, EventBus *events)
 {

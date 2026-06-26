@@ -26,7 +26,7 @@ namespace Engine::Scene
         inline const std::vector<std::unique_ptr<Entity>> &getEntities() const { return entities; }
         Entity *getEntityById(uint64_t id) const;
 
-        void update(float deltaTime);
+        void update();
 
         template <typename T, typename... Args>
         inline T *addSystem(Args &&...args)

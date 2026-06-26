@@ -1,22 +1,24 @@
-#ifndef __ENGINE_V2_EVENTS_HPP
-#define __ENGINE_V2_EVENTS_HPP
+#ifndef __ENGINE_V2_SCENE_SYSTEMS_EVENTS_HPP
+#define __ENGINE_V2_SCENE_SYSTEMS_EVENTS_HPP
 /**
  * Copyright (C) 2026 Christian Theriot
  */
+
+#include <engine/v2/scene/system.hpp>
 #include <memory>
 #include <typeindex>
 #include <vector>
 #include <unordered_map>
 #include <functional>
 
-namespace Engine
+namespace Engine::Scene::Systems
 {
     struct Event
     {
         virtual ~Event() = default;
     };
 
-    class EventBus
+    class EventBus : public Scene::System
     {
         struct DeferredEvent
         {
@@ -49,6 +51,7 @@ namespace Engine
         }
 
         void processEvents();
+        inline void update(Scene::World *world, float deltaTime) override { processEvents(); }
     };
 }
 

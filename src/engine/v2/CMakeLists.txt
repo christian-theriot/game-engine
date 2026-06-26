@@ -1,6 +1,4 @@
 add_library(engine
-    clock.cpp
-    events.cpp
     render/render-mesh.cpp
     resources/mesh.cpp
     resources/script.cpp
@@ -10,12 +8,14 @@ add_library(engine
     scene/components/mesh.cpp
     scene/components/rigidbody.cpp
     scene/components/transform.cpp
+    scene/systems/clock.cpp
+    scene/systems/events.cpp
     scene/systems/input.cpp
     scene/systems/physics.cpp
+    scene/systems/window.cpp
     scene/entity.cpp
     scene/world.cpp
     version.cpp
-    window.cpp
 )
 target_include_directories(engine PUBLIC
     ${CMAKE_SOURCE_DIR}/include

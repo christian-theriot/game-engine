@@ -1,9 +1,9 @@
 /**
  * Copyright (C) 2026 Christian Theriot
  */
-#include <engine/v2/events.hpp>
+#include <engine/v2/scene/systems/events.hpp>
 
-void Engine::EventBus::processEvents()
+void Engine::Scene::Systems::EventBus::processEvents()
 {
     currentQueue = std::move(nextQueue);
 
