@@ -54,13 +54,13 @@ namespace Engine::Core
     inline void deleteProgram(GLuint id) { glDeleteProgram(id); }
     inline void deleteShader(GLuint id) { glDeleteShader(id); }
     inline void deleteTexture(GLuint id) { glDeleteTextures(1, &id); }
-    inline void deleteBuffer(GLuint id) { glDeleteBuffers(1, &id); }
+    inline void deleteGLBuffer(GLuint id) { glDeleteBuffers(1, &id); }
     inline void deleteVertexArray(GLuint id) { glDeleteVertexArrays(1, &id); }
 
     using ProgramHandle = GLHandle<deleteProgram>;
     using ShaderHandle = GLHandle<deleteShader>;
     using TextureHandle = GLHandle<deleteTexture>;
-    using BufferHandle = GLHandle<deleteBuffer>;
+    using BufferHandle = GLHandle<deleteGLBuffer>;
     using VertexArrayHandle = GLHandle<deleteVertexArray>;
 }
 

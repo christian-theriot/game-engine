@@ -7,6 +7,11 @@ void Engine::Resources::Transform::update()
     model = glm::translate(model, position);
     model *= glm::mat4_cast(rotation);
     model = glm::scale(model, scale);
+
+    acceleration = velocity - lastVelocity;
+    lastVelocity = velocity;
+    velocity = position - lastPosition;
+    lastPosition = position;
 }
 glm::mat4 Engine::Resources::Transform::updated() const
 {

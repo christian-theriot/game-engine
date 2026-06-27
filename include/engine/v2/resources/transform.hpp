@@ -38,9 +38,15 @@ namespace glm
 
 namespace Engine::Resources
 {
-    struct Transform : public Serialization::ISerializable
+    class Transform : public Serialization::ISerializable
     {
+        glm::vec3 lastPosition;
+        glm::vec3 lastVelocity;
+
+    public:
         glm::vec3 position = glm::vec3(0.f, 0.f, 0.f);
+        glm::vec3 velocity = glm::vec3(0.f, 0.f, 0.f);
+        glm::vec3 acceleration = glm::vec3(0.f, 0.f, 0.f);
         glm::quat rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
         glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f);
         glm::mat4 model = glm::mat4(1.f);

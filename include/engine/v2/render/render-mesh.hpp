@@ -39,7 +39,7 @@ namespace Engine::Render
         {
             this->view = view;
         }
-        void render(const Resources::Transform &transform, const Core::Result<Resources::Shader> &shader, const Core::Result<Resources::Texture> &texture) const;
+        void render(Resources::Transform &transform, const Core::Result<Resources::Shader> &shader, const Core::Result<Resources::Texture> &texture) const;
     };
 }
 

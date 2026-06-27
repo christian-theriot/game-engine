@@ -6,6 +6,7 @@
 #include <engine/v2/scene/systems/window.hpp>
 #include <engine/v2/scene/systems/events.hpp>
 #include <engine/v2/scene/systems/clock.hpp>
+#include <engine/v2/scene/systems/audio.hpp>
 #include <engine/v2/resources/shader.hpp>
 #include <engine/v2/resources/texture.hpp>
 #include <engine/v2/render/render-mesh.hpp>
@@ -63,13 +64,24 @@ int main(int argc, char **argv)
     file >> inJson;
     world = inJson.get<Engine::Scene::World>();
 
+    auto *audio = world.addSystem<Engine::Scene::Systems::Audio>();
+
     auto projection = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
     auto view = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+    Engine::Resources::Transform listenerTransform;
+
+    listenerTransform.position = glm::vec3(3, 3, 3);
+    audio->setListenerTransform(listenerTransform);
 
     auto shader = Engine::Resources::Shader::load("texture");
     auto texture = Engine::Resources::Texture::load("checkerboard-even.png");
 
     auto cubeEntity = world.getEntityById(1);
+    cubeEntity->addComponent<Engine::Scene::Components::AudioSource>("assets/audio/footstep-wood.wav", 1.0f, 1.0f, false, true);
+
+    audio->add(cubeEntity);
+
     auto planeEntity = world.getEntityById(2);
 
     cubeEntity->getRenderMesh().value().setProjection(projection);
@@ -85,18 +97,22 @@ int main(int argc, char **argv)
         if (event.getKey() == GLFW_KEY_LEFT && event.getAction() == GLFW_PRESS)
         {
             std::cout << "left" << std::endl;
+            audio->play(cubeEntity);
         }
         else if (event.getKey() == GLFW_KEY_RIGHT && event.getAction() == GLFW_PRESS)
         {
             std::cout << "right" << std::endl;
+            audio->play(cubeEntity);
         }
         else if (event.getKey() == GLFW_KEY_UP && event.getAction() == GLFW_PRESS)
         {
             std::cout << "up" << std::endl;
+            audio->play(cubeEntity);
         }
         else if (event.getKey() == GLFW_KEY_DOWN && event.getAction() == GLFW_PRESS)
         {
             std::cout << "down" << std::endl;
+            audio->play(cubeEntity);
         } });
 
     while (window->is_open())

@@ -105,7 +105,7 @@ Engine::Core::Result<Engine::Render::RenderMesh> Engine::Render::RenderMesh::loa
 
     return Core::Ok(std::move(renderMesh));
 }
-void Engine::Render::RenderMesh::render(const Resources::Transform &transform, const Core::Result<Resources::Shader> &shader, const Core::Result<Resources::Texture> &texture) const
+void Engine::Render::RenderMesh::render(Resources::Transform &transform, const Core::Result<Resources::Shader> &shader, const Core::Result<Resources::Texture> &texture) const
 {
     if (shader.ok())
     {
@@ -118,7 +118,8 @@ void Engine::Render::RenderMesh::render(const Resources::Transform &transform, c
             return;
         }
 
-        glm::mat4 mvp = projection * view * transform.updated();
+        transform.update();
+        glm::mat4 mvp = projection * view * transform.model;
         glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
     }
     else
