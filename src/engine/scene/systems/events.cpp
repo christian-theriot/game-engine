@@ -1,0 +1,23 @@
+/**
+ * Copyright (C) 2026 Christian Theriot
+ */
+#include <engine/scene/systems/events.hpp>
+
+void Engine::Scene::Systems::EventBus::processEvents()
+{
+    currentQueue = std::move(nextQueue);
+
+    for (auto &queuedEvent : currentQueue)
+    {
+        auto item = handlers.find(queuedEvent.type.hash_code());
+        if (item != handlers.end())
+        {
+            for (auto &handler : item->second)
+            {
+                handler(*queuedEvent.event);
+            }
+        }
+    }
+
+    currentQueue.clear();
+}

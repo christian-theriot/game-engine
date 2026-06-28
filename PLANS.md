@@ -1,12 +1,7 @@
 ## 1. Advanced Graphics
 Lighting, shadows, post-processing
 
-## 2. Data Serialization - 🚧 In Progress
-- Serialize components
-- Serialize entities
-- Unserialize entities
-
-## 3. Immediate Mode Editor
+## 2. Immediate Mode Editor - 🚧 In Progress
 - Panels for creating, editing, saving scenes
 - Creating & moving objects, setting properties on their components
 - docking of panels, with an OpenGL context for the editor/game preview
@@ -37,8 +32,8 @@ Lighting, shadows, post-processing
     - <s>setPosition</s> - ✓ Complete
     - <s>setRotation</s> - ✓ Complete
     - <s>setScale</s> - ✓ Complete
-- Data serialization - 🚧 In Progress
-- Immediate mode Editor
+- <s>Data serialization</s> - ✓ Complete
+- Immediate mode Editor - 🚧 In Progress
 - Advanced Graphics
   - Specular / Diffuse / Ambient
   - Normal Maps
