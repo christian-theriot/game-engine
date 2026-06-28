@@ -13,8 +13,10 @@
 #include <engine/v2/scene/components/mesh.hpp>
 #include <engine/v2/scene/components/transform.hpp>
 #include <engine/v2/scene/components/rigidbody.hpp>
+#include <engine/v2/scene/components/script.hpp>
 #include <engine/v2/scene/entity.hpp>
 #include <engine/v2/scene/systems/physics.hpp>
+#include <engine/v2/scene/systems/script.hpp>
 #include <engine/v2/scene/world.hpp>
 #include <engine/v2/scene/systems/input.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,44 +29,25 @@ int main(int argc, char **argv)
     Engine::Version version(0, 2, 3);
     std::cout << "Game Engine v" << version.get() << std::endl;
 
-    // std::ifstream inFile("entity.json");
-    // nlohmann::json inJson;
-    // inFile >> inJson;
-    // auto cube = inJson.at("cube").get<Engine::Scene::Entity>();
-    // auto plane = inJson.at("plane").get<Engine::Scene::Entity>();
-
-    // Engine::Scene::World world;
-
-    // auto cubeEntity = world.createEntity();
-    // cubeEntity->addComponent<Engine::Scene::Components::Mesh>(cube.getComponent<Engine::Scene::Components::Mesh>()->getMesh());
-    // cubeEntity->addComponent<Engine::Scene::Components::Transform>();
-    // cubeEntity->addComponent<Engine::Scene::Components::Rigidbody>(glm::vec3(0.5f, 0.5f, 0.5f), 1.f, false, 0.5f, 0.5f);
-
-    // cubeEntity->getComponent<Engine::Scene::Components::Transform>()->setTransform(cube.getComponent<Engine::Scene::Components::Transform>()->getTransform());
-
-    // auto planeEntity = world.createEntity();
-    // planeEntity->addComponent<Engine::Scene::Components::Mesh>(plane.getComponent<Engine::Scene::Components::Mesh>()->getMesh());
-    // planeEntity->addComponent<Engine::Scene::Components::Transform>();
-    // planeEntity->addComponent<Engine::Scene::Components::Rigidbody>(glm::vec3(0.5f, 0.5f, 0.5f), 1.f, true, 0.05f, 0.5f);
-
-    // planeEntity->getComponent<Engine::Scene::Components::Transform>()->setTransform(plane.getComponent<Engine::Scene::Components::Transform>()->getTransform());
-
-    // auto *physics = world.addSystem<Engine::Scene::Systems::Physics>();
-
-    // auto cubeHandle = physics->add(cubeEntity);
-    // auto planeHandle = physics->add(planeEntity);
-
-    // std::ofstream file("world.json");
-    // nlohmann::json outJson = world;
-    // file << outJson.dump(4);
-
     Engine::Scene::World world;
     std::ifstream file("world.json");
     nlohmann::json inJson;
     file >> inJson;
-    world = inJson.get<Engine::Scene::World>();
+    inJson.get_to(world);
 
-    auto *audio = world.addSystem<Engine::Scene::Systems::Audio>();
+    // auto *lua = world.getSystem<Engine::Scene::Systems::LuaScript>();
+    auto *wasm = world.getSystem<Engine::Scene::Systems::WasmScript>();
+    auto *audio = world.getSystem<Engine::Scene::Systems::Audio>();
+    auto wasmEntities = world.getEntitiesWithComponent<Engine::Scene::Components::WasmScript>();
+
+    if (wasm)
+    {
+        wasm->setWorld(&world);
+        for (auto *entity : wasmEntities)
+        {
+            wasm->load(entity);
+        }
+    }
 
     auto projection = glm::perspective(glm::radians(45.0f), 1024.0f / 768.0f, 0.1f, 100.0f);
     auto view = glm::lookAt(glm::vec3(3, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
@@ -78,10 +61,6 @@ int main(int argc, char **argv)
     auto texture = Engine::Resources::Texture::load("checkerboard-even.png");
 
     auto cubeEntity = world.getEntityById(1);
-    cubeEntity->addComponent<Engine::Scene::Components::AudioSource>("assets/audio/footstep-wood.wav", 1.0f, 1.0f, false, true);
-
-    audio->add(cubeEntity);
-
     auto planeEntity = world.getEntityById(2);
 
     cubeEntity->getRenderMesh().value().setProjection(projection);

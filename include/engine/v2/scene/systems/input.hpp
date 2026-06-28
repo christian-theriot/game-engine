@@ -111,12 +111,12 @@ namespace Engine::Scene::Systems
 {
     class Window;
 
-    class InputSystem : public Scene::System
+    class Input : public Scene::System
     {
         static EventBus *events;
 
     public:
-        InputSystem(const Window *window, EventBus *events);
+        Input(const Window *window, EventBus *events);
         static void setEventBus(EventBus *eventBus) { events = eventBus; }
         static void handleKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
         static void handleCharacterEvent(GLFWwindow *window, unsigned int codepoint);

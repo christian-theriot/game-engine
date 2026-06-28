@@ -9,6 +9,7 @@
 #include <vector>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
+#include <memory>
 
 namespace Engine::Scene
 {

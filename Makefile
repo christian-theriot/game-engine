@@ -39,10 +39,10 @@ convert:
 	@echo ffmpeg -i ${file}.mp3 -acodec pcm_s16le -ar 44100 ${file}.wav
 
 compile-wasm:
-	@asc assets/wasm/${file}.ts -o assets/wasm/${file}.wasm --exportRuntime --optimize
+	@asc assets/scripts/wasm/${file}.ts -o assets/scripts/wasm/${file}.wasm --exportRuntime --optimize
 
 objdump-wasm:
-	@wasm-objdump -x assets/wasm/${file}.wasm | grep -A 20 "Import"
+	@wasm-objdump -x assets/scripts/wasm/${file}.wasm | grep -A 20 "Import"
 
 debug:
 	@lldb build/src/game-engine

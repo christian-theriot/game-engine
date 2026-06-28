@@ -1,8 +1,10 @@
 #include <engine/v2/scene/world.hpp>
+#include <engine/v2/scene/systems/audio.hpp>
 #include <engine/v2/scene/systems/clock.hpp>
 #include <engine/v2/scene/systems/events.hpp>
 #include <engine/v2/scene/systems/input.hpp>
 #include <engine/v2/scene/systems/physics.hpp>
+#include <engine/v2/scene/systems/script.hpp>
 #include <engine/v2/scene/systems/window.hpp>
 #include <algorithm>
 #include <iostream>
@@ -44,17 +46,22 @@ void Engine::Scene::World::update()
     auto clock = getSystem<Systems::Clock>();
     float deltaTime = clock ? clock->getDeltaTime() : 0.f;
 
-    // We want to maintain a relatively strict order of system updates to ensure that the game logic behaves as expected. The order is as follows:
-    // 1. Clock: Update the clock to get the delta time for this frame.
-    // 2. Physics: Update the physics system to simulate physics for this frame.
-    // 3. Input: Process input events to update the state of the game based on user interactions.
-    // 4. EventBus: Process any events that have been queued up during the frame, allowing systems to react to changes.
-    // 5. Window: Refresh the window to display the latest frame and handle window events.
-    getSystem<Systems::Clock>()->update(this, deltaTime);
-    getSystem<Systems::Physics>()->update(this, deltaTime);
-    getSystem<Systems::InputSystem>()->update(this, deltaTime);
-    getSystem<Systems::EventBus>()->update(this, deltaTime);
-    getSystem<Systems::Window>()->update(this, deltaTime);
+    if (hasSystem<Systems::Clock>())
+        getSystem<Systems::Clock>()->update(this, deltaTime);
+    if (hasSystem<Systems::Physics>())
+        getSystem<Systems::Physics>()->update(this, deltaTime);
+    if (hasSystem<Systems::Input>())
+        getSystem<Systems::Input>()->update(this, deltaTime);
+    if (hasSystem<Systems::EventBus>())
+        getSystem<Systems::EventBus>()->update(this, deltaTime);
+    if (hasSystem<Systems::LuaScript>())
+        getSystem<Systems::LuaScript>()->update(this, deltaTime);
+    if (hasSystem<Systems::WasmScript>())
+        getSystem<Systems::WasmScript>()->update(this, deltaTime);
+    if (hasSystem<Systems::Audio>())
+        getSystem<Systems::Audio>()->update(this, deltaTime);
+    if (hasSystem<Systems::Window>())
+        getSystem<Systems::Window>()->update(this, deltaTime);
 }
 void Engine::Scene::to_json(nlohmann::json &j, const World &world)
 {
@@ -81,14 +88,30 @@ void Engine::Scene::to_json(nlohmann::json &j, const World &world)
     {
         j["systems"].push_back("Window");
     }
-    if (world.hasSystem<Systems::InputSystem>())
+    if (world.hasSystem<Systems::Input>())
     {
         j["systems"].push_back("Input");
+    }
+    if (world.hasSystem<Systems::Audio>())
+    {
+        j["systems"].push_back("Audio");
+    }
+    if (world.hasSystem<Systems::LuaScript>())
+    {
+        j["systems"].push_back("Lua");
+    }
+    if (world.hasSystem<Systems::WasmScript>())
+    {
+        j["systems"].push_back("Wasm");
     }
 }
 void Engine::Scene::from_json(const nlohmann::json &j, World &world)
 {
     Systems::Physics *physics = nullptr;
+    Systems::LuaScript *lua = nullptr;
+    Systems::WasmScript *wasm = nullptr;
+    Systems::Audio *audio = nullptr;
+
     for (const auto &systemJson : j.at("systems"))
     {
         const std::string systemType = systemJson.get<std::string>();
@@ -102,7 +125,7 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
         }
         else if (systemType == "Input")
         {
-            world.addSystem<Systems::InputSystem>(world.getSystem<Systems::Window>(), world.getSystem<Systems::EventBus>());
+            world.addSystem<Systems::Input>(world.getSystem<Systems::Window>(), world.getSystem<Systems::EventBus>());
         }
         else if (systemType == "Window")
         {
@@ -112,12 +135,29 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
         {
             physics = world.addSystem<Systems::Physics>();
         }
+        else if (systemType == "Audio")
+        {
+            audio = world.addSystem<Systems::Audio>();
+        }
+        else if (systemType == "Lua")
+        {
+            lua = world.addSystem<Systems::LuaScript>();
+        }
+        else if (systemType == "Wasm")
+        {
+            wasm = world.addSystem<Systems::WasmScript>();
+        }
     }
 
     for (const auto &entityJson : j.at("entities"))
     {
         Entity *entity = world.createEntity();
         entityJson.get_to(*entity);
+
+        if (audio)
+        {
+            audio->add(entity);
+        }
 
         if (physics)
         {

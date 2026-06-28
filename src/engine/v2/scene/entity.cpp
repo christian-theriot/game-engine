@@ -2,6 +2,8 @@
 #include <engine/v2/scene/components/mesh.hpp>
 #include <engine/v2/scene/components/transform.hpp>
 #include <engine/v2/scene/components/rigidbody.hpp>
+#include <engine/v2/scene/components/script.hpp>
+#include <engine/v2/scene/components/audio-source.hpp>
 
 void Engine::Scene::to_json(nlohmann::json &j, const Entity &entity)
 {
@@ -22,6 +24,22 @@ void Engine::Scene::to_json(nlohmann::json &j, const Entity &entity)
             else if (component.second->type() == "Rigidbody")
             {
                 j["components"].push_back(*dynamic_cast<Components::Rigidbody *>(component.second.get()));
+            }
+            else if (component.second->type() == "LuaScript")
+            {
+                j["components"].push_back(*dynamic_cast<Components::LuaScript *>(component.second.get()));
+            }
+            else if (component.second->type() == "WasmScript")
+            {
+                j["components"].push_back(*dynamic_cast<Components::WasmScript *>(component.second.get()));
+            }
+            else if (component.second->type() == "AudioSource")
+            {
+                j["components"].push_back(*dynamic_cast<Components::AudioSource *>(component.second.get()));
+            }
+            else
+            {
+                std::cerr << "Warning: Unknown component type '" << component.second->type() << "' during serialization." << std::endl;
             }
         }
     }
@@ -44,6 +62,22 @@ void Engine::Scene::from_json(const nlohmann::json &j, Entity &entity)
             else if (type == "Rigidbody")
             {
                 entity.addComponent<Components::Rigidbody>(component.get<Components::Rigidbody>());
+            }
+            else if (type == "LuaScript")
+            {
+                entity.addComponent<Components::LuaScript>(component.get<Components::LuaScript>());
+            }
+            else if (type == "WasmScript")
+            {
+                entity.addComponent<Components::WasmScript>(component.get<Components::WasmScript>());
+            }
+            else if (type == "AudioSource")
+            {
+                entity.addComponent<Components::AudioSource>(component.get<Components::AudioSource>());
+            }
+            else
+            {
+                std::cerr << "Warning: Unknown component type '" << type << "' during deserialization." << std::endl;
             }
         }
     }
