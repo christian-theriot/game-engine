@@ -16,10 +16,10 @@ add_library(engine
     scene/components/transform.cpp
     scene/systems/physics.cpp
     scene/systems/script.cpp
-    scene/systems/window.cpp
     scene/entity.cpp
     scene/world.cpp
     version.cpp
+    window.cpp
 )
 target_include_directories(engine PUBLIC
     ${CMAKE_SOURCE_DIR}/include

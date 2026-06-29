@@ -108,17 +108,14 @@ namespace Engine
 
 namespace Engine
 {
-    namespace Scene::Systems
-    {
-        class Window;
-    }
+    class Window;
 
     class Input
     {
         static EventBus *events;
 
     public:
-        Input(const Scene::Systems::Window *window, EventBus *events);
+        Input(const Window *window, EventBus *events);
         static void setEventBus(EventBus *eventBus) { events = eventBus; }
         static void handleKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
         static void handleCharacterEvent(GLFWwindow *window, unsigned int codepoint);

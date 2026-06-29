@@ -3,7 +3,7 @@
  */
 
 #include <engine/version.hpp>
-#include <engine/scene/systems/window.hpp>
+#include <engine/window.hpp>
 #include <engine/events.hpp>
 #include <engine/clock.hpp>
 #include <engine/audio.hpp>
@@ -26,9 +26,10 @@
 
 int main(int argc, char **argv)
 {
-    Engine::Version version(0, 2, 4);
+    Engine::Version version(0, 2, 5);
     std::cout << "Game Engine v" << version.get() << std::endl;
 
+    Engine::Window window;
     Engine::Scene::World world;
     std::ifstream file("world.json");
     nlohmann::json inJson;
@@ -40,7 +41,7 @@ int main(int argc, char **argv)
     Engine::Audio audio;
     Engine::Clock clock;
     Engine::EventBus events;
-    Engine::Input input(world.getSystem<Engine::Scene::Systems::Window>(), &events);
+    Engine::Input input(&window, &events);
 
     auto audioEntities = world.getEntitiesWithComponent<Engine::Scene::Components::AudioSource>();
 
@@ -79,8 +80,6 @@ int main(int argc, char **argv)
     cubeEntity->getRenderMesh().value().setView(view);
     planeEntity->getRenderMesh().value().setView(view);
 
-    auto window = world.getSystem<Engine::Scene::Systems::Window>();
-
     events.subscribe<Engine::KeyEvent>([&](const Engine::KeyEvent &event)
                                        {
         if (event.getKey() == GLFW_KEY_LEFT && event.getAction() == GLFW_PRESS)
@@ -104,15 +103,15 @@ int main(int argc, char **argv)
             audio.play(cubeEntity);
         } });
 
-    while (window->is_open())
+    while (window.is_open())
     {
         clock.tick();
         events.tick();
-        window->glDeclarations();
+        window.glDeclarations();
 
-        if (glfwGetKey(window->get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        if (glfwGetKey(window.get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
         {
-            window->close();
+            window.close();
         }
 
         cubeEntity->getRenderMesh().value().render(cubeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
@@ -121,6 +120,7 @@ int main(int argc, char **argv)
 
         audio.update(&world, clock.getDeltaTime());
         world.update(clock.getDeltaTime());
+        window.tick();
     }
 
     return 0;

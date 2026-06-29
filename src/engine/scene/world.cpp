@@ -1,7 +1,6 @@
 #include <engine/scene/world.hpp>
 #include <engine/scene/systems/physics.hpp>
 #include <engine/scene/systems/script.hpp>
-#include <engine/scene/systems/window.hpp>
 #include <algorithm>
 #include <iostream>
 
@@ -45,8 +44,6 @@ void Engine::Scene::World::update(float deltaTime)
         getSystem<Systems::LuaScript>()->update(this, deltaTime);
     if (hasSystem<Systems::WasmScript>())
         getSystem<Systems::WasmScript>()->update(this, deltaTime);
-    if (hasSystem<Systems::Window>())
-        getSystem<Systems::Window>()->update(this, deltaTime);
 }
 void Engine::Scene::to_json(nlohmann::json &j, const World &world)
 {
@@ -57,14 +54,9 @@ void Engine::Scene::to_json(nlohmann::json &j, const World &world)
     }
 
     j["systems"] = nlohmann::json::array();
-
     if (world.hasSystem<Systems::Physics>())
     {
         j["systems"].push_back("Physics");
-    }
-    if (world.hasSystem<Systems::Window>())
-    {
-        j["systems"].push_back("Window");
     }
     if (world.hasSystem<Systems::LuaScript>())
     {
@@ -84,11 +76,7 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
     for (const auto &systemJson : j.at("systems"))
     {
         const std::string systemType = systemJson.get<std::string>();
-        if (systemType == "Window")
-        {
-            world.addSystem<Systems::Window>();
-        }
-        else if (systemType == "Physics")
+        if (systemType == "Physics")
         {
             physics = world.addSystem<Systems::Physics>();
         }

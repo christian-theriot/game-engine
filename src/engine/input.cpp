@@ -1,9 +1,9 @@
 #include <engine/input.hpp>
-#include <engine/scene/systems/window.hpp>
+#include <engine/window.hpp>
 
 Engine::EventBus *Engine::Input::events = nullptr;
 
-Engine::Input::Input(const Scene::Systems::Window *window, EventBus *events)
+Engine::Input::Input(const Window *window, EventBus *events)
 {
     setEventBus(events);
     glfwSetKeyCallback(window->get(), handleKeyEvent);
