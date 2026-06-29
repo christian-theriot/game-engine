@@ -5,7 +5,7 @@
 #include <engine/version.hpp>
 #include <engine/scene/systems/window.hpp>
 #include <engine/scene/systems/events.hpp>
-#include <engine/scene/systems/clock.hpp>
+#include <engine/clock.hpp>
 #include <engine/audio.hpp>
 #include <engine/resources/shader.hpp>
 #include <engine/resources/texture.hpp>
@@ -38,6 +38,7 @@ int main(int argc, char **argv)
     // auto *lua = world.getSystem<Engine::Scene::Systems::LuaScript>();
     auto *wasm = world.getSystem<Engine::Scene::Systems::WasmScript>();
     Engine::Audio audio;
+    Engine::Clock clock;
 
     auto audioEntities = world.getEntitiesWithComponent<Engine::Scene::Components::AudioSource>();
 
@@ -104,6 +105,7 @@ int main(int argc, char **argv)
 
     while (window->is_open())
     {
+        clock.tick();
         window->glDeclarations();
 
         if (glfwGetKey(window->get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -115,8 +117,8 @@ int main(int argc, char **argv)
         // cubeEntity.getRenderMesh().value().render(cubeEntity.getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
         planeEntity->getRenderMesh().value().render(planeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
 
-        audio.update(&world, world.getSystem<Engine::Scene::Systems::Clock>()->getDeltaTime());
-        world.update();
+        audio.update(&world, clock.getDeltaTime());
+        world.update(clock.getDeltaTime());
     }
 
     return 0;

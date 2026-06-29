@@ -1,5 +1,4 @@
 #include <engine/scene/world.hpp>
-#include <engine/scene/systems/clock.hpp>
 #include <engine/scene/systems/events.hpp>
 #include <engine/scene/systems/input.hpp>
 #include <engine/scene/systems/physics.hpp>
@@ -40,13 +39,8 @@ Engine::Scene::Entity *Engine::Scene::World::getEntityById(uint64_t id) const
 
     return nullptr;
 }
-void Engine::Scene::World::update()
+void Engine::Scene::World::update(float deltaTime)
 {
-    auto clock = getSystem<Systems::Clock>();
-    float deltaTime = clock ? clock->getDeltaTime() : 0.f;
-
-    if (hasSystem<Systems::Clock>())
-        getSystem<Systems::Clock>()->update(this, deltaTime);
     if (hasSystem<Systems::Physics>())
         getSystem<Systems::Physics>()->update(this, deltaTime);
     if (hasSystem<Systems::Input>())
@@ -69,10 +63,6 @@ void Engine::Scene::to_json(nlohmann::json &j, const World &world)
     }
 
     j["systems"] = nlohmann::json::array();
-    if (world.hasSystem<Systems::Clock>())
-    {
-        j["systems"].push_back("Clock");
-    }
     if (world.hasSystem<Systems::EventBus>())
     {
         j["systems"].push_back("Events");
@@ -107,11 +97,7 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
     for (const auto &systemJson : j.at("systems"))
     {
         const std::string systemType = systemJson.get<std::string>();
-        if (systemType == "Clock")
-        {
-            world.addSystem<Systems::Clock>();
-        }
-        else if (systemType == "Events")
+        if (systemType == "Events")
         {
             world.addSystem<Systems::EventBus>();
         }
@@ -134,6 +120,10 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
         else if (systemType == "Wasm")
         {
             wasm = world.addSystem<Systems::WasmScript>();
+        }
+        else
+        {
+            std::cerr << "Unknown system type: " << systemType << std::endl;
         }
     }
 

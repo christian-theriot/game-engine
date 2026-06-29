@@ -4,12 +4,11 @@
  * Copyright (C) 2026 Christian Theriot
  */
 
-#include <engine/scene/system.hpp>
 #include <chrono>
 
-namespace Engine::Scene::Systems
+namespace Engine
 {
-    class Clock : public Scene::System
+    class Clock
     {
     private:
         std::chrono::high_resolution_clock::time_point startTime;
@@ -29,8 +28,6 @@ namespace Engine::Scene::Systems
         void pause();
         void resume();
         void reset();
-
-        inline void update(Scene::World *world, float deltaTime) override { tick(); }
 
         // Getters
         float getDeltaTime() const;   // Time since last frame (seconds)
