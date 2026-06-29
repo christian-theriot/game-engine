@@ -23,38 +23,42 @@
 
 #include <iostream>
 #include <fstream>
+#include <pthread.h>
 
 int main(int argc, char **argv)
 {
+    pthread_mutex_t mutex;
+    pthread_mutex_init(&mutex, nullptr);
+
     Engine::Version version(0, 2, 5);
     std::cout << "Game Engine v" << version.get() << std::endl;
 
     Engine::Window window;
-    Engine::Scene::World world;
+    std::unique_ptr<Engine::Scene::World> world = std::make_unique<Engine::Scene::World>();
     std::ifstream file("world.json");
     nlohmann::json inJson;
     file >> inJson;
-    inJson.get_to(world);
+    inJson.get_to(*world);
 
     // auto *lua = world.getSystem<Engine::Scene::Systems::LuaScript>();
-    auto *wasm = world.getSystem<Engine::Scene::Systems::WasmScript>();
+    auto *wasm = world->getSystem<Engine::Scene::Systems::WasmScript>();
     Engine::Audio audio;
     Engine::Clock clock;
     Engine::EventBus events;
     Engine::Input input(&window, &events);
 
-    auto audioEntities = world.getEntitiesWithComponent<Engine::Scene::Components::AudioSource>();
+    auto audioEntities = world->getEntitiesWithComponent<Engine::Scene::Components::AudioSource>();
 
     for (auto *entity : audioEntities)
     {
         audio.add(entity);
     }
 
-    auto wasmEntities = world.getEntitiesWithComponent<Engine::Scene::Components::WasmScript>();
+    auto wasmEntities = world->getEntitiesWithComponent<Engine::Scene::Components::WasmScript>();
 
     if (wasm)
     {
-        wasm->setWorld(&world);
+        wasm->setWorld(world.get());
         for (auto *entity : wasmEntities)
         {
             wasm->load(entity);
@@ -72,8 +76,8 @@ int main(int argc, char **argv)
     auto shader = Engine::Resources::Shader::load("texture");
     auto texture = Engine::Resources::Texture::load("checkerboard-even.png");
 
-    auto cubeEntity = world.getEntityById(1);
-    auto planeEntity = world.getEntityById(2);
+    auto cubeEntity = world->getEntityById(1);
+    auto planeEntity = world->getEntityById(2);
 
     cubeEntity->getRenderMesh().value().setProjection(projection);
     planeEntity->getRenderMesh().value().setProjection(projection);
@@ -101,6 +105,31 @@ int main(int argc, char **argv)
         {
             std::cout << "down" << std::endl;
             audio.play(cubeEntity);
+        }
+        else if (event.getKey() == GLFW_KEY_R && event.getAction() == GLFW_PRESS)
+        {
+            std::cout << "Load world.json" << std::endl;
+            nlohmann::json inJson;
+            std::ifstream file("world.json");
+            Engine::Scene::World newWorld;
+            file >> inJson;
+            inJson.get_to(newWorld);
+
+            pthread_mutex_lock(&mutex);
+            world = std::make_unique<Engine::Scene::World>(std::move(newWorld));
+
+
+            auto& entities = world->getEntities();
+
+            cubeEntity = entities[0].get();
+            planeEntity = entities[1].get();
+
+            cubeEntity->getRenderMesh().value().setProjection(projection);
+            planeEntity->getRenderMesh().value().setProjection(projection);
+            cubeEntity->getRenderMesh().value().setView(view);
+            planeEntity->getRenderMesh().value().setView(view);
+            pthread_mutex_unlock(&mutex);
+            // Reset logic here
         } });
 
     while (window.is_open())
@@ -114,12 +143,14 @@ int main(int argc, char **argv)
             window.close();
         }
 
+        pthread_mutex_lock(&mutex);
         cubeEntity->getRenderMesh().value().render(cubeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
         // cubeEntity.getRenderMesh().value().render(cubeEntity.getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
         planeEntity->getRenderMesh().value().render(planeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
+        pthread_mutex_unlock(&mutex);
 
-        audio.update(&world, clock.getDeltaTime());
-        world.update(clock.getDeltaTime());
+        audio.update(world.get(), clock.getDeltaTime());
+        world->update(clock.getDeltaTime());
         window.tick();
     }
 

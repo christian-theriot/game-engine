@@ -10,6 +10,7 @@
 #include <memory>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
+#include <iostream>
 
 namespace Engine::Scene
 {
@@ -21,6 +22,7 @@ namespace Engine::Scene
 
     public:
         inline Entity() = default;
+        ~Entity() { std::cout << "Entity " << id << " destroyed" << std::endl; }
 
         inline uint64_t getId() const { return id; }
         inline void setId(uint64_t newId) { id = newId; }
