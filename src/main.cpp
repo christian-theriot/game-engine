@@ -4,7 +4,7 @@
 
 #include <engine/version.hpp>
 #include <engine/scene/systems/window.hpp>
-#include <engine/scene/systems/events.hpp>
+#include <engine/events.hpp>
 #include <engine/clock.hpp>
 #include <engine/audio.hpp>
 #include <engine/resources/shader.hpp>
@@ -18,7 +18,7 @@
 #include <engine/scene/systems/physics.hpp>
 #include <engine/scene/systems/script.hpp>
 #include <engine/scene/world.hpp>
-#include <engine/scene/systems/input.hpp>
+#include <engine/input.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
@@ -39,6 +39,8 @@ int main(int argc, char **argv)
     auto *wasm = world.getSystem<Engine::Scene::Systems::WasmScript>();
     Engine::Audio audio;
     Engine::Clock clock;
+    Engine::EventBus events;
+    Engine::Input input(world.getSystem<Engine::Scene::Systems::Window>(), &events);
 
     auto audioEntities = world.getEntitiesWithComponent<Engine::Scene::Components::AudioSource>();
 
@@ -77,11 +79,10 @@ int main(int argc, char **argv)
     cubeEntity->getRenderMesh().value().setView(view);
     planeEntity->getRenderMesh().value().setView(view);
 
-    auto events = world.getSystem<Engine::Scene::Systems::EventBus>();
     auto window = world.getSystem<Engine::Scene::Systems::Window>();
 
-    events->subscribe<Engine::KeyEvent>([&](const Engine::KeyEvent &event)
-                                        {
+    events.subscribe<Engine::KeyEvent>([&](const Engine::KeyEvent &event)
+                                       {
         if (event.getKey() == GLFW_KEY_LEFT && event.getAction() == GLFW_PRESS)
         {
             std::cout << "left" << std::endl;
@@ -106,6 +107,7 @@ int main(int argc, char **argv)
     while (window->is_open())
     {
         clock.tick();
+        events.tick();
         window->glDeclarations();
 
         if (glfwGetKey(window->get(), GLFW_KEY_ESCAPE) == GLFW_PRESS)

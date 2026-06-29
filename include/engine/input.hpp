@@ -1,17 +1,16 @@
-#ifndef __ENGINE_SCENE_SYSTEMS_INPUT_HPP
-#define __ENGINE_SCENE_SYSTEMS_INPUT_HPP
+#ifndef __ENGINE_INPUT_HPP
+#define __ENGINE_INPUT_HPP
 /**
  * Copyright (C) 2026 Christian Theriot
  */
 
-#include <engine/scene/systems/events.hpp>
-#include <engine/scene/system.hpp>
+#include <engine/events.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Engine
 {
-    class KeyEvent : public Scene::Systems::Event
+    class KeyEvent : public Event
     {
         int key;
         int scancode;
@@ -27,7 +26,7 @@ namespace Engine
         inline int getMods() const { return mods; }
     };
 
-    class CharacterEvent : public Scene::Systems::Event
+    class CharacterEvent : public Event
     {
         unsigned int codepoint;
 
@@ -36,7 +35,7 @@ namespace Engine
         inline unsigned int getCodepoint() const { return codepoint; }
     };
 
-    class CursorEvent : public Scene::Systems::Event
+    class CursorEvent : public Event
     {
         double xpos;
         double ypos;
@@ -47,7 +46,7 @@ namespace Engine
         inline double getY() const { return ypos; }
     };
 
-    class CursorEnterEvent : public Scene::Systems::Event
+    class CursorEnterEvent : public Event
     {
         bool entered;
 
@@ -56,7 +55,7 @@ namespace Engine
         inline bool get() const { return entered; }
     };
 
-    class MouseButtonEvent : public Scene::Systems::Event
+    class MouseButtonEvent : public Event
     {
         int button;
         int action;
@@ -70,7 +69,7 @@ namespace Engine
         inline int getMods() const { return mods; }
     };
 
-    class ScrollEvent : public Scene::Systems::Event
+    class ScrollEvent : public Event
     {
         double xoffset;
         double yoffset;
@@ -81,7 +80,7 @@ namespace Engine
         inline double getYOffset() const { return yoffset; }
     };
 
-    class JoystickEvent : public Scene::Systems::Event
+    class JoystickEvent : public Event
     {
         int jid;
         int event;
@@ -92,7 +91,7 @@ namespace Engine
         inline int getEvent() const { return event; }
     };
 
-    class DropEvent : public Scene::Systems::Event
+    class DropEvent : public Event
     {
         std::vector<std::string> paths;
 
@@ -107,16 +106,19 @@ namespace Engine
 
 }
 
-namespace Engine::Scene::Systems
+namespace Engine
 {
-    class Window;
+    namespace Scene::Systems
+    {
+        class Window;
+    }
 
-    class Input : public Scene::System
+    class Input
     {
         static EventBus *events;
 
     public:
-        Input(const Window *window, EventBus *events);
+        Input(const Scene::Systems::Window *window, EventBus *events);
         static void setEventBus(EventBus *eventBus) { events = eventBus; }
         static void handleKeyEvent(GLFWwindow *window, int key, int scancode, int action, int mods);
         static void handleCharacterEvent(GLFWwindow *window, unsigned int codepoint);
@@ -126,7 +128,6 @@ namespace Engine::Scene::Systems
         static void handleScrollEvent(GLFWwindow *window, double xoffset, double yoffset);
         static void handleJoystickEvent(int jid, int event);
         static void handleDropEvent(GLFWwindow *window, int count, const char **paths);
-        inline void update(World *world, float deltaTime) override {}
     };
 }
 

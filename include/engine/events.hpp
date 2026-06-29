@@ -1,24 +1,23 @@
-#ifndef __ENGINE_SCENE_SYSTEMS_EVENTS_HPP
-#define __ENGINE_SCENE_SYSTEMS_EVENTS_HPP
+#ifndef __ENGINE_EVENTS_HPP
+#define __ENGINE_EVENTS_HPP
 /**
  * Copyright (C) 2026 Christian Theriot
  */
 
-#include <engine/scene/system.hpp>
 #include <memory>
 #include <typeindex>
 #include <vector>
 #include <unordered_map>
 #include <functional>
 
-namespace Engine::Scene::Systems
+namespace Engine
 {
     struct Event
     {
         virtual ~Event() = default;
     };
 
-    class EventBus : public Scene::System
+    class EventBus
     {
         struct DeferredEvent
         {
@@ -50,8 +49,7 @@ namespace Engine::Scene::Systems
             nextQueue.push_back({std::type_index(typeid(EventType)), std::make_shared<EventType>(event)});
         }
 
-        void processEvents();
-        inline void update(Scene::World *world, float deltaTime) override { processEvents(); }
+        void tick();
     };
 }
 

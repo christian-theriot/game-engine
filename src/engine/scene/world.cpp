@@ -1,6 +1,4 @@
 #include <engine/scene/world.hpp>
-#include <engine/scene/systems/events.hpp>
-#include <engine/scene/systems/input.hpp>
 #include <engine/scene/systems/physics.hpp>
 #include <engine/scene/systems/script.hpp>
 #include <engine/scene/systems/window.hpp>
@@ -43,10 +41,6 @@ void Engine::Scene::World::update(float deltaTime)
 {
     if (hasSystem<Systems::Physics>())
         getSystem<Systems::Physics>()->update(this, deltaTime);
-    if (hasSystem<Systems::Input>())
-        getSystem<Systems::Input>()->update(this, deltaTime);
-    if (hasSystem<Systems::EventBus>())
-        getSystem<Systems::EventBus>()->update(this, deltaTime);
     if (hasSystem<Systems::LuaScript>())
         getSystem<Systems::LuaScript>()->update(this, deltaTime);
     if (hasSystem<Systems::WasmScript>())
@@ -63,10 +57,7 @@ void Engine::Scene::to_json(nlohmann::json &j, const World &world)
     }
 
     j["systems"] = nlohmann::json::array();
-    if (world.hasSystem<Systems::EventBus>())
-    {
-        j["systems"].push_back("Events");
-    }
+
     if (world.hasSystem<Systems::Physics>())
     {
         j["systems"].push_back("Physics");
@@ -74,10 +65,6 @@ void Engine::Scene::to_json(nlohmann::json &j, const World &world)
     if (world.hasSystem<Systems::Window>())
     {
         j["systems"].push_back("Window");
-    }
-    if (world.hasSystem<Systems::Input>())
-    {
-        j["systems"].push_back("Input");
     }
     if (world.hasSystem<Systems::LuaScript>())
     {
@@ -97,15 +84,7 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
     for (const auto &systemJson : j.at("systems"))
     {
         const std::string systemType = systemJson.get<std::string>();
-        if (systemType == "Events")
-        {
-            world.addSystem<Systems::EventBus>();
-        }
-        else if (systemType == "Input")
-        {
-            world.addSystem<Systems::Input>(world.getSystem<Systems::Window>(), world.getSystem<Systems::EventBus>());
-        }
-        else if (systemType == "Window")
+        if (systemType == "Window")
         {
             world.addSystem<Systems::Window>();
         }

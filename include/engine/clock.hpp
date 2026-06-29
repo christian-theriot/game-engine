@@ -1,5 +1,5 @@
-#ifndef __ENGINE_SCENE_SYSTEMS_CLOCK_HPP
-#define __ENGINE_SCENE_SYSTEMS_CLOCK_HPP
+#ifndef __ENGINE_CLOCK_HPP
+#define __ENGINE_CLOCK_HPP
 /**
  * Copyright (C) 2026 Christian Theriot
  */
