@@ -1,4 +1,5 @@
 add_library(engine
+    audio.cpp
     render/render-mesh.cpp
     resources/audio-clip.cpp
     resources/mesh.cpp
@@ -10,7 +11,6 @@ add_library(engine
     scene/components/rigidbody.cpp
     scene/components/script.cpp
     scene/components/transform.cpp
-    scene/systems/audio.cpp
     scene/systems/clock.cpp
     scene/systems/events.cpp
     scene/systems/input.cpp

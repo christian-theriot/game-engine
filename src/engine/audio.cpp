@@ -1,9 +1,9 @@
-#include <engine/scene/systems/audio.hpp>
+#include <engine/audio.hpp>
 #include <engine/scene/components/transform.hpp>
 #include <engine/scene/world.hpp>
 #include <iostream>
 
-Engine::Scene::Systems::Audio::Audio()
+Engine::Audio::Audio()
 {
     device = Core::DeviceHandle(alcOpenDevice(nullptr));
     if (!device)
@@ -18,7 +18,7 @@ Engine::Scene::Systems::Audio::Audio()
         return;
     }
 }
-Engine::Scene::Systems::Audio::~Audio()
+Engine::Audio::~Audio()
 {
     for (auto &[id, source] : sources)
     {
@@ -28,9 +28,9 @@ Engine::Scene::Systems::Audio::~Audio()
     context.reset();
     device.reset();
 }
-void Engine::Scene::Systems::Audio::add(Entity *entity)
+void Engine::Audio::add(Scene::Entity *entity)
 {
-    auto *audioSource = entity->getComponent<Components::AudioSource>();
+    auto *audioSource = entity->getComponent<Scene::Components::AudioSource>();
     if (!audioSource)
         return;
 
@@ -64,7 +64,7 @@ void Engine::Scene::Systems::Audio::add(Entity *entity)
         alSourcePlay(source);
     }
 }
-void Engine::Scene::Systems::Audio::remove(Entity *entity)
+void Engine::Audio::remove(Scene::Entity *entity)
 {
     auto it = sources.find(entity->getId());
     if (it != sources.end())
@@ -73,7 +73,7 @@ void Engine::Scene::Systems::Audio::remove(Entity *entity)
         sources.erase(it);
     }
 }
-void Engine::Scene::Systems::Audio::play(Entity *entity)
+void Engine::Audio::play(Scene::Entity *entity)
 {
     auto it = sources.find(entity->getId());
     if (it != sources.end())
@@ -81,11 +81,11 @@ void Engine::Scene::Systems::Audio::play(Entity *entity)
         alSourcePlay(it->second.get());
     }
 }
-void Engine::Scene::Systems::Audio::update(World *world, float deltaTime)
+void Engine::Audio::update(Scene::World *world, float deltaTime)
 {
     for (const auto &entity : world->getEntities())
     {
-        auto *transform = entity->getComponent<Components::Transform>();
+        auto *transform = entity->getComponent<Scene::Components::Transform>();
         auto it = sources.find(entity->getId());
 
         if (transform && it != sources.end())
@@ -95,7 +95,7 @@ void Engine::Scene::Systems::Audio::update(World *world, float deltaTime)
         }
     }
 }
-void Engine::Scene::Systems::Audio::setListenerTransform(const Resources::Transform &transform)
+void Engine::Audio::setListenerTransform(const Resources::Transform &transform)
 {
     const auto &position = transform.position;
     const auto &rotation = transform.rotation;

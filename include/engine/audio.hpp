@@ -1,12 +1,11 @@
-#ifndef __ENGINE_SCENE_SYSTEMS_AUDIO_HPP
-#define __ENGINE_SCENE_SYSTEMS_AUDIO_HPP
+#ifndef __ENGINE_AUDIO_HPP
+#define __ENGINE_AUDIO_HPP
 /**
  * Copyright (C) 2026 Christian Theriot
  */
 
 #include <engine/resources/audio-clip.hpp>
 #include <engine/resources/resource-cache.hpp>
-#include <engine/scene/system.hpp>
 #include <engine/scene/components/audio-source.hpp>
 #include <engine/resources/transform.hpp>
 #include <engine/scene/entity.hpp>
@@ -14,9 +13,14 @@
 #include <AL/alc.h>
 #include <unordered_map>
 
-namespace Engine::Scene::Systems
+namespace Engine
 {
-    class Audio : public System
+    namespace Scene
+    {
+        class World;
+    }
+
+    class Audio
     {
         Core::DeviceHandle device;
         Core::AudioContextHandle context;
@@ -28,10 +32,10 @@ namespace Engine::Scene::Systems
         Audio();
         ~Audio();
 
-        void add(Entity *entity);
-        void remove(Entity *entity);
-        void play(Entity *entity);
-        void update(World *world, float deltaTime) override;
+        void add(Scene::Entity *entity);
+        void remove(Scene::Entity *entity);
+        void play(Scene::Entity *entity);
+        void update(Scene::World *world, float deltaTime);
 
         void setListenerTransform(const Resources::Transform &transform);
     };

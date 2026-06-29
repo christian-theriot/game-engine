@@ -6,7 +6,7 @@
 #include <engine/scene/systems/window.hpp>
 #include <engine/scene/systems/events.hpp>
 #include <engine/scene/systems/clock.hpp>
-#include <engine/scene/systems/audio.hpp>
+#include <engine/audio.hpp>
 #include <engine/resources/shader.hpp>
 #include <engine/resources/texture.hpp>
 #include <engine/render/render-mesh.hpp>
@@ -37,7 +37,15 @@ int main(int argc, char **argv)
 
     // auto *lua = world.getSystem<Engine::Scene::Systems::LuaScript>();
     auto *wasm = world.getSystem<Engine::Scene::Systems::WasmScript>();
-    auto *audio = world.getSystem<Engine::Scene::Systems::Audio>();
+    Engine::Audio audio;
+
+    auto audioEntities = world.getEntitiesWithComponent<Engine::Scene::Components::AudioSource>();
+
+    for (auto *entity : audioEntities)
+    {
+        audio.add(entity);
+    }
+
     auto wasmEntities = world.getEntitiesWithComponent<Engine::Scene::Components::WasmScript>();
 
     if (wasm)
@@ -55,7 +63,7 @@ int main(int argc, char **argv)
     Engine::Resources::Transform listenerTransform;
 
     listenerTransform.position = glm::vec3(3, 3, 3);
-    audio->setListenerTransform(listenerTransform);
+    audio.setListenerTransform(listenerTransform);
 
     auto shader = Engine::Resources::Shader::load("texture");
     auto texture = Engine::Resources::Texture::load("checkerboard-even.png");
@@ -76,22 +84,22 @@ int main(int argc, char **argv)
         if (event.getKey() == GLFW_KEY_LEFT && event.getAction() == GLFW_PRESS)
         {
             std::cout << "left" << std::endl;
-            audio->play(cubeEntity);
+            audio.play(cubeEntity);
         }
         else if (event.getKey() == GLFW_KEY_RIGHT && event.getAction() == GLFW_PRESS)
         {
             std::cout << "right" << std::endl;
-            audio->play(cubeEntity);
+            audio.play(cubeEntity);
         }
         else if (event.getKey() == GLFW_KEY_UP && event.getAction() == GLFW_PRESS)
         {
             std::cout << "up" << std::endl;
-            audio->play(cubeEntity);
+            audio.play(cubeEntity);
         }
         else if (event.getKey() == GLFW_KEY_DOWN && event.getAction() == GLFW_PRESS)
         {
             std::cout << "down" << std::endl;
-            audio->play(cubeEntity);
+            audio.play(cubeEntity);
         } });
 
     while (window->is_open())
@@ -107,6 +115,7 @@ int main(int argc, char **argv)
         // cubeEntity.getRenderMesh().value().render(cubeEntity.getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
         planeEntity->getRenderMesh().value().render(planeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
 
+        audio.update(&world, world.getSystem<Engine::Scene::Systems::Clock>()->getDeltaTime());
         world.update();
     }
 

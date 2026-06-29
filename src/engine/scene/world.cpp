@@ -1,5 +1,4 @@
 #include <engine/scene/world.hpp>
-#include <engine/scene/systems/audio.hpp>
 #include <engine/scene/systems/clock.hpp>
 #include <engine/scene/systems/events.hpp>
 #include <engine/scene/systems/input.hpp>
@@ -58,8 +57,6 @@ void Engine::Scene::World::update()
         getSystem<Systems::LuaScript>()->update(this, deltaTime);
     if (hasSystem<Systems::WasmScript>())
         getSystem<Systems::WasmScript>()->update(this, deltaTime);
-    if (hasSystem<Systems::Audio>())
-        getSystem<Systems::Audio>()->update(this, deltaTime);
     if (hasSystem<Systems::Window>())
         getSystem<Systems::Window>()->update(this, deltaTime);
 }
@@ -92,10 +89,6 @@ void Engine::Scene::to_json(nlohmann::json &j, const World &world)
     {
         j["systems"].push_back("Input");
     }
-    if (world.hasSystem<Systems::Audio>())
-    {
-        j["systems"].push_back("Audio");
-    }
     if (world.hasSystem<Systems::LuaScript>())
     {
         j["systems"].push_back("Lua");
@@ -110,7 +103,6 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
     Systems::Physics *physics = nullptr;
     Systems::LuaScript *lua = nullptr;
     Systems::WasmScript *wasm = nullptr;
-    Systems::Audio *audio = nullptr;
 
     for (const auto &systemJson : j.at("systems"))
     {
@@ -135,10 +127,6 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
         {
             physics = world.addSystem<Systems::Physics>();
         }
-        else if (systemType == "Audio")
-        {
-            audio = world.addSystem<Systems::Audio>();
-        }
         else if (systemType == "Lua")
         {
             lua = world.addSystem<Systems::LuaScript>();
@@ -153,11 +141,6 @@ void Engine::Scene::from_json(const nlohmann::json &j, World &world)
     {
         Entity *entity = world.createEntity();
         entityJson.get_to(*entity);
-
-        if (audio)
-        {
-            audio->add(entity);
-        }
 
         if (physics)
         {
