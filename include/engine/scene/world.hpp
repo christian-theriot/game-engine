@@ -18,7 +18,7 @@ namespace Engine::Scene
         std::vector<std::unique_ptr<Entity>> entities;
         std::unordered_map<size_t, std::unique_ptr<System>> systems;
 
-        static uint64_t nextEntityId;
+        uint64_t nextEntityId = 1;
 
     public:
         Entity *createEntity();
@@ -27,7 +27,23 @@ namespace Engine::Scene
         inline const std::vector<std::unique_ptr<Entity>> &getEntities() const { return entities; }
         Entity *getEntityById(uint64_t id) const;
 
+        World() = default;
+        World(World &&other)
+        {
+            entities = std::move(other.entities);
+            systems = std::move(other.systems);
+            nextEntityId = other.nextEntityId;
+        }
+        World &operator=(World &&other)
+        {
+            entities = std::move(other.entities);
+            systems = std::move(other.systems);
+            nextEntityId = other.nextEntityId;
+            return *this;
+        }
+
         void update(float deltaTime);
+        void clear();
 
         template <typename T, typename... Args>
         inline T *addSystem(Args &&...args)

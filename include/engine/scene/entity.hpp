@@ -19,12 +19,16 @@ namespace Engine::Scene
         uint64_t id;
         std::unordered_map<size_t, std::unique_ptr<Component>> components;
         Core::Result<Render::RenderMesh> renderMesh = Core::Fail<Render::RenderMesh>("RenderMesh not loaded");
+        std::string name;
 
     public:
         inline Entity() = default;
 
         inline uint64_t getId() const { return id; }
         inline void setId(uint64_t newId) { id = newId; }
+
+        inline const std::string &getName() const { return name; }
+        inline void setName(const std::string &newName) { name = newName; }
 
         template <typename T, typename... Args>
         inline T *addComponent(Args &&...args)

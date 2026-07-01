@@ -4,8 +4,6 @@
 #include <algorithm>
 #include <iostream>
 
-uint64_t Engine::Scene::World::nextEntityId = 1;
-
 Engine::Scene::Entity *Engine::Scene::World::createEntity()
 {
     auto entity = std::make_unique<Entity>();
@@ -44,6 +42,11 @@ void Engine::Scene::World::update(float deltaTime)
         getSystem<Systems::LuaScript>()->update(this, deltaTime);
     if (hasSystem<Systems::WasmScript>())
         getSystem<Systems::WasmScript>()->update(this, deltaTime);
+}
+void Engine::Scene::World::clear()
+{
+    entities.clear();
+    systems.clear();
 }
 void Engine::Scene::to_json(nlohmann::json &j, const World &world)
 {

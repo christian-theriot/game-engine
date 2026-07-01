@@ -1,6 +1,9 @@
 add_library(engine
     audio.cpp
     clock.cpp
+    editor/panel/file.cpp
+    editor/panel/scene.cpp
+    editor/imgui-manager.cpp
     events.cpp
     input.cpp
     render/render-mesh.cpp
@@ -33,6 +36,7 @@ target_link_libraries(engine
     Jolt
     assimp
     scripting_deps
+    imgui
     nlohmann_json::nlohmann_json
     -L/Users/ctheriot/homebrew/Cellar/glfw/3.4/lib -lglfw
     -L/Users/ctheriot/homebrew/Cellar/glm/1.0.3/lib -lglm

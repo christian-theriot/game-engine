@@ -21,6 +21,10 @@
 #include <engine/input.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <engine/editor/imgui-manager.hpp>
+#include <engine/editor/panel/file.hpp>
+#include <engine/editor/panel/scene.hpp>
+
 #include <iostream>
 #include <fstream>
 
@@ -28,11 +32,11 @@ int main(int argc, char **argv)
 {
     pthread_mutex_t mutex;
 
-    Engine::Version version(0, 2, 5);
+    Engine::Version version(0, 2, 6);
     std::cout << "Game Engine v" << version.get() << std::endl;
 
     Engine::Window window;
-    std::unique_ptr<Engine::Scene::World> world = std::make_unique<Engine::Scene::World>();
+    std::shared_ptr<Engine::Scene::World> world = std::make_shared<Engine::Scene::World>();
     std::ifstream file("world.json");
     nlohmann::json inJson;
     file >> inJson;
@@ -82,6 +86,25 @@ int main(int argc, char **argv)
     cubeEntity->getRenderMesh().value().setView(view);
     planeEntity->getRenderMesh().value().setView(view);
 
+    Engine::Editor::ImGuiManager imgui(window.get(), "#version 330");
+    Engine::Editor::FilePanel filePanel(world, &events);
+    Engine::Editor::ScenePanel scenePanel(world);
+
+    events.subscribe<Engine::Editor::FileLoadEvent>([&](const Engine::Editor::FileLoadEvent &event)
+                                                    {
+        world = event.world;
+        filePanel.setWorld(world);
+        scenePanel.setWorld(world);
+
+            auto& entities = world->getEntities();
+
+            cubeEntity = entities[0].get();
+            planeEntity = entities[1].get();
+
+            cubeEntity->getRenderMesh().value().setProjection(projection);
+            planeEntity->getRenderMesh().value().setProjection(projection);
+            cubeEntity->getRenderMesh().value().setView(view);
+            planeEntity->getRenderMesh().value().setView(view); });
     events.subscribe<Engine::KeyEvent>([&](const Engine::KeyEvent &event)
                                        {
         if (event.getKey() == GLFW_KEY_LEFT && event.getAction() == GLFW_PRESS)
@@ -103,28 +126,6 @@ int main(int argc, char **argv)
         {
             std::cout << "down" << std::endl;
             audio.play(cubeEntity);
-        }
-        else if (event.getKey() == GLFW_KEY_R && event.getAction() == GLFW_PRESS)
-        {
-            std::cout << "Load world.json" << std::endl;
-            nlohmann::json inJson;
-            std::ifstream file("world.json");
-            Engine::Scene::World newWorld;
-            file >> inJson;
-            inJson.get_to(newWorld);
-
-            world = std::make_unique<Engine::Scene::World>(std::move(newWorld));
-
-
-            auto& entities = world->getEntities();
-
-            cubeEntity = entities[0].get();
-            planeEntity = entities[1].get();
-
-            cubeEntity->getRenderMesh().value().setProjection(projection);
-            planeEntity->getRenderMesh().value().setProjection(projection);
-            cubeEntity->getRenderMesh().value().setView(view);
-            planeEntity->getRenderMesh().value().setView(view);
         } });
 
     while (window.is_open())
@@ -140,6 +141,11 @@ int main(int argc, char **argv)
 
         cubeEntity->getRenderMesh().value().render(cubeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
         planeEntity->getRenderMesh().value().render(planeEntity->getComponent<Engine::Scene::Components::Transform>()->getTransform(), shader, texture);
+
+        imgui.beginFrame();
+        filePanel.render();
+        scenePanel.render();
+        imgui.endFrame();
 
         audio.update(world.get(), clock.getDeltaTime());
         world->update(clock.getDeltaTime());

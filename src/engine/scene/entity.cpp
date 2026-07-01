@@ -7,6 +7,7 @@
 
 void Engine::Scene::to_json(nlohmann::json &j, const Entity &entity)
 {
+    j["name"] = entity.getName();
     j["components"] = nlohmann::json::array();
 
     for (const auto &component : entity.getComponents())
@@ -46,6 +47,7 @@ void Engine::Scene::to_json(nlohmann::json &j, const Entity &entity)
 }
 void Engine::Scene::from_json(const nlohmann::json &j, Entity &entity)
 {
+    entity.setName(j.at("name").get<std::string>());
     for (const auto &component : j.at("components"))
     {
         if (component.contains("type"))
